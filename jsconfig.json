@@ -1,0 +1,12 @@
+{
+  "include": ["."],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "target": "esnext",
+    "module": "commonJS",
+    "checkJs": true,
+    "jsx": "react-native",
+    "resolveJsonModule": true
+  }
+}
