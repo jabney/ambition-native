@@ -120,7 +120,6 @@ const SigninForm = ({ model, onChange, onSignin, onSignup }) => {
     <Button title='Sign In' containerStyle={[styles.button, buttonStyles]} onPress={onSignin} />
     <NavLink text='Need an account? Sign up...' containerStyle={[styles.link, linkStyles]} onPress={onSignup} />
   </View>
-
 }
 
 export default SigninForm
