@@ -1,8 +1,9 @@
 import React from 'react'
 import { StyleSheet, Animated } from 'react-native'
 import Svg, { Path } from 'react-native-svg'
-
 import { interpolate, combine, separate, splitPathString } from 'flubber/index'
+
+import styles from './ambition-logo.styles'
 
 const groups = [
   {
@@ -45,27 +46,19 @@ const group6interpolator = interpolate(groups[6].orchid, groups[6].butterfly, { 
 
 const ambitionPath = 'M375.5,526.49V515.563c0-.047,43.718.933,42.492-30.027-0.344-8.7-16.925-52.018-37.653-103.086H213.775c-20.617,48.289-37.325,87.947-38.941,93.378-12.364,41.566,48.676,39.735,48.676,39.735V526.49H88.411V515.563s30.111-2.1,46.688-26.821C152.981,462.07,309.934,88.411,309.934,88.411h10.927S474.844,459.118,488.742,481.788c22.738,37.091,54.635,33.775,54.635,33.775V526.49H375.5ZM298.013,186.755S257.657,279.928,223.119,360.6h148.29C337.689,278.511,298.013,186.755,298.013,186.755Z'
 
-const AmbitionLogo = ({ value, aColor = '#ddd', color='#eee', style={} }) => (
-  <Animated.View style={[StyleSheet.absoluteFill, styles.container, style]}>
-    <Svg style={styles.svg} viewBox='0 0 600 600'>
-      <Path d={ambitionPath} fill={aColor} />
-      <Path d={group0interpolator(value)} fill={color} />
-      <Path d={group1interpolator(value)} fill={color} />
-      <Path d={group2interpolator(value)} fill={color} />
-      <Path d={group3interpolator(value)} fill={color} />
-      <Path d={group4interpolator(value)} fill={color} />
-      <Path d={group5interpolator(value)} fill={color} />
-      <Path d={group6interpolator(value)} fill={color} />
-    </Svg>
-  </Animated.View>
-)
+const AmbitionLogo = ({ value, aColor = '#ddd', color='#eee', style={} }) => {
+  return <Animated.View style={[StyleSheet.absoluteFill, styles.container, style]}>
+  <Svg style={styles.svg} viewBox='0 0 600 600'>
+    <Path d={ambitionPath} fill={aColor} />
+    <Path d={group0interpolator(value)} fill={color} />
+    <Path d={group1interpolator(value)} fill={color} />
+    <Path d={group2interpolator(value)} fill={color} />
+    <Path d={group3interpolator(value)} fill={color} />
+    <Path d={group4interpolator(value)} fill={color} />
+    <Path d={group5interpolator(value)} fill={color} />
+    <Path d={group6interpolator(value)} fill={color} />
+  </Svg>
+</Animated.View>
+}
 
 export default AmbitionLogo
-
-const styles = StyleSheet.create({
-  container: {},
-  svg: {
-    width: '100%',
-    height: '100%',
-  },
-})

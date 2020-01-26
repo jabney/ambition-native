@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, Animated, Easing } from 'react-native'
 
-import AmbitionLogo from 'src/components/AmbitionLogo'
+import AmbitionLogo from 'src/components/ambition-logo'
 
 import styles from './splash.styles'
 

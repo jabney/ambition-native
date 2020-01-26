@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { View, Animated, Keyboard } from 'react-native'
 
-import AmbitionLogo from 'src/components/AmbitionLogo'
+import AmbitionLogo from 'src/components/ambition-logo'
 import SigninForm from 'src/components/signin-form/signin-form.component'
 
 import styles from './signin.styles'
