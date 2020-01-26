@@ -49,9 +49,6 @@ const SplashScreen = ({ navigation }) => {
 
   return <View style={styles.container}>
     <AmbitionLogo value={value} style={logoStyles} />
-    <View>
-
-    </View>
   </View>
 }
 
