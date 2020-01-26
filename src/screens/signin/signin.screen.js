@@ -151,7 +151,7 @@ const SigninScreen = ({ navigation }) => {
     <AmbitionLogo value={logoValue} />
     <Animated.View style={styles.formView}>
       <SlickInput value={email} label='Email' containerStyle={emailStyles} inputStyle={styles.input} onChangeText={setEmail} />
-      <SlickInput value={password} label='Password' containerStyle={passStyles} inputStyle={styles.input} onChangeText={setPassword} />
+      <SlickInput value={password} label='Password' containerStyle={passStyles} inputStyle={styles.input} onChangeText={setPassword} secureTextEntry={true} />
       <Button title='Sign In' containerStyle={[styles.button, buttonStyles]} onPress={dismiss} />
       <NavLink text='Need an account? Sign up...' containerStyle={[styles.link, linkStyles]} onPress={() => console.log('nav link')} />
     </Animated.View>

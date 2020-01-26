@@ -4,7 +4,7 @@ import pad from './pad'
 
 import styles from './slick-input.styles'
 
-const SlickInput = ({ label, value, onChangeText, containerStyle, inputStyle }) => {
+const SlickInput = ({ label, value, onChangeText, containerStyle, inputStyle, ...props }) => {
   const [animation] = useState(() => new Animated.Value(0))
 
   const labelPos = animation.interpolate({
@@ -56,6 +56,7 @@ const SlickInput = ({ label, value, onChangeText, containerStyle, inputStyle }) 
       onChangeText={onText}
       onFocus={() => moveLabel(true)}
       onBlur={() => moveLabel(false)}
+      {...props}
     />
     <Animated.View style={[styles.labelContainer, labelContainer]} pointerEvents='none'>
       <Animated.Text style={[styles.label, labelText]}>{label}</Animated.Text>
