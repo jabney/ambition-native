@@ -4,8 +4,8 @@ import { createStackNavigator } from 'react-navigation-stack'
 // import { createBottomTabNavigator } from 'react-navigation-tabs'
 import navigationService from './services/navigation.service'
 
-import SplashScreen from './screens/splash/splash.screen'
-import SigninScreen from './screens/signin/signin.screen'
+import SplashScreen from './screens/splash'
+import SigninScreen from './screens/signin'
 
 const mainNavigator = createSwitchNavigator({
   SplashScreen: SplashScreen,

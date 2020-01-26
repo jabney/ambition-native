@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, Animated } from 'react-native'
-import SlickInput from 'src/components/slick-input/slick-input.component'
-import Button from 'src/components/button/button.component'
-import NavLink from 'src/components/nav-link/nav-link.component'
+import SlickInput from 'src/components/slick-input'
+import Button from 'src/components/button'
+import NavLink from 'src/components/nav-link'
 
 import styles from './signin-form.styles'
 
