@@ -9,24 +9,14 @@ import styles from './signin-form.styles'
 /**
  *
  */
-const SigninForm = ({ model, onChange, onSignin, onSignup }) => {
+const SigninForm = ({ model, onChange, onSignin, onSignup, value=1 }) => {
   const [email, setEmail] = useState(model && model.emeil || '')
   const [password, setPassword] = useState(model && model.password || '')
   const [formAnim] = useState(() => new Animated.Value(0))
 
   useEffect(() => void onChange({ email, password }), [email, password])
 
-  const start = () => {
-    Animated.sequence([
-      Animated.delay(250),
-      Animated.parallel([
-        // Animated.timing(logoAnim, { toValue: 0, duration: 3000, useNativeDriver: true }),
-        Animated.timing(formAnim, { toValue: 1, duration: 1000, useNativeDriver: true }),
-      ])
-    ]).start(() => {})
-  }
-
-  useEffect(() => void start(), [])
+  formAnim.setValue(value)
 
   const emailAnim = formAnim.interpolate({
     inputRange: [0, 0.25],
@@ -88,6 +78,7 @@ const SigninForm = ({ model, onChange, onSignin, onSignup }) => {
   })
 
   const emailStyles = {
+    opacity: emailAnim,
     transform: [
       { scale: emailAnim },
     ]

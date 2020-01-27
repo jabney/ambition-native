@@ -11,13 +11,34 @@ import styles from './signin.styles'
  */
 const SigninScreen = ({ navigation }) => {
   const [logoValue, setLogoValue] = useState(1)
+
+  const [signinFormValue, setSigninFormValue] = useState(0)
+  const [signupFormValue, setSignupFormValue] = useState(0)
+
+  const [scrollEnabled, setScrollEnabled] = useState(false)
+
   const [scrollAnim] = useState(() => new Animated.Value(0))
+  const [formAnim] = useState(() => new Animated.Value(0))
   const [dismissAnim] = useState(() => new Animated.Value(0))
+
   const scrollView = useRef(/**@type {ScrollView}*/(null))
 
-  const [form, setForm] = useState(() => ({ email: '', password: '' }))
+  const [signinForm, setSigninForm] = useState(() => ({ email: '', password: '' }))
+  const [signupForm, setSignupForm] = useState(() => ({ email: '', password: '' }))
 
   const { width } = Dimensions.get('window')
+
+  const start = () => {
+    Animated.sequence([
+      Animated.delay(250),
+      Animated.timing(formAnim, { toValue: 1, duration: 1000, useNativeDriver: true }),
+    ]).start(() => {
+      setScrollEnabled(true)
+      formAnim.removeAllListeners()
+    })
+  }
+
+  useEffect(() => void start(), [])
 
   /**
    * @type {Animated.AnimatedInterpolation & {__getValue: () => number}}
@@ -28,13 +49,31 @@ const SigninScreen = ({ navigation }) => {
     extrapolate: 'clamp',
   }))
 
+  /**
+   * @type {Animated.AnimatedInterpolation & {__getValue: () => number}}
+   */
+  const formInterpolator = (scrollAnim.interpolate({
+    inputRange: [-width, 0, width],
+    outputRange: [0, 1, 0],
+    extrapolate: 'clamp',
+  }))
+
   // Set up animation listeners.
   useEffect(() => {
     scrollAnim.addListener(({ value }) => {
       setLogoValue(logoInterpolator.__getValue())
+      setSigninFormValue(formInterpolator.__getValue())
+      setSignupFormValue(1 - formInterpolator.__getValue())
     })
 
-    return () => scrollAnim.removeAllListeners()
+    formAnim.addListener(({ value }) => {
+      setSigninFormValue(value)
+    })
+
+    return () => {
+      scrollAnim.removeAllListeners()
+      formAnim.removeAllListeners()
+    }
   }, [])
 
   /**
@@ -46,8 +85,16 @@ const SigninScreen = ({ navigation }) => {
       .start(() => {})
   }
 
+  const page = (num) => {
+    return { x: (num-1) * width, y: 0 }
+  }
+
   const next = () => {
-    scrollView.current.scrollTo({ x: width, y: 0 })
+    scrollView.current.scrollTo(page(2))
+  }
+
+  const prev = () => {
+    scrollView.current.scrollTo(page(1))
   }
 
   const viewScale = dismissAnim.interpolate({
@@ -75,7 +122,7 @@ const SigninScreen = ({ navigation }) => {
       horizontal
       pagingEnabled
       scrollEventThrottle={16}
-      // style={{ borderWidth: 5 }}
+      scrollEnabled={scrollEnabled}
       onScroll={Animated.event([
         {
           nativeEvent: { contentOffset: { x: scrollAnim }}
@@ -84,17 +131,12 @@ const SigninScreen = ({ navigation }) => {
     >
       <View style={pageStyle}>
         <View style={[styles.formView]}>
-          <SigninForm model={form} onChange={setForm} onSignin={dismiss} onSignup={next} />
+          <SigninForm model={signinForm} onChange={setSigninForm} onSignin={dismiss} onSignup={next} value={signinFormValue} />
         </View>
       </View>
       <View style={pageStyle}>
         <View style={[styles.formView]}>
-          <SigninForm model={form} onChange={setForm} onSignin={dismiss} onSignup={() => console.log('sign up')} />
-        </View>
-      </View>
-      <View style={pageStyle}>
-        <View style={[styles.formView]}>
-          <SigninForm model={form} onChange={setForm} onSignin={dismiss} onSignup={() => console.log('sign up')} />
+          <SigninForm model={signupForm} onChange={setSignupForm} onSignin={dismiss} onSignup={prev} value={signupFormValue}/>
         </View>
       </View>
     </ScrollView>
