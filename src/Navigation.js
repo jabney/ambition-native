@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React from 'react'
 import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
-// import { createBottomTabNavigator } from 'react-navigation-tabs'
+import { createBottomTabNavigator } from 'react-navigation-tabs'
 import navigationService from './services/navigation.service'
 
 import SplashScreen from './screens/splash'

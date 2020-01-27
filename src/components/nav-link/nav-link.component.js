@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { View, Text, TouchableOpacity, Animated } from 'react-native'
+import React from 'react'
+import { Text, TouchableOpacity, Animated } from 'react-native'
 
 import styles from './nav-link.styles'
 

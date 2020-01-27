@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Animated } from 'react-native'
+import { View } from 'react-native'
 import SlickInput from 'src/components/slick-input'
 import Button from 'src/components/button'
 import NavLink from 'src/components/nav-link'

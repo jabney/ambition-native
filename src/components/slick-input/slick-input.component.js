@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, TextInput, Animated, StyleSheet } from 'react-native'
+import { TextInput, Animated } from 'react-native'
 import pad from './pad'
 
 import styles from './slick-input.styles'
