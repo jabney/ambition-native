@@ -141,11 +141,11 @@ const AuthScreen = ({ navigation }) => {
       <View style={pageStyle}>
         <View style={[styles.formView]}>
           <Text style={styles.title}>Create an Account</Text>
-          {<AuthForm model={authModel} onChange={setAuthModel}
+          <AuthForm model={authModel} onChange={setAuthModel}
             buttonText='Sign Up' linkText='Have an account? Sign in...'
             onButton={dismiss} onLink={page1}
             animation={signupAnim}
-          />}
+          />
         </View>
       </View>
     </ScrollView>
