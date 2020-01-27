@@ -40,8 +40,8 @@ const AuthScreen = ({ navigation }) => {
    * @type {Animated.AnimatedInterpolation & {__getValue: () => number}}
    */
   const logoInterpolator = (scrollAnim.interpolate({
-    inputRange: [-width, 0, width, 2*width, 3*width],
-    outputRange: [0, 1, 0, 1, 0],
+    inputRange: [-width, 0, width, 2*width, 3*width, 4*width],
+    outputRange: [0, 1, 0, 1, 0, 1],
     extrapolate: 'clamp',
   }))
 
@@ -147,6 +147,10 @@ const AuthScreen = ({ navigation }) => {
             animation={signupAnim}
           />
         </View>
+      </View>
+      <View style={pageStyle}>
+      </View>
+      <View style={pageStyle}>
       </View>
     </ScrollView>
   </Animated.View>
