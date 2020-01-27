@@ -124,7 +124,7 @@ const SigninScreen = ({ navigation }) => {
       scrollEnabled={scrollEnabled}
       onScroll={Animated.event([
         {
-          nativeEvent: { contentOffset: { x: scrollAnim }}
+          nativeEvent: { contentOffset: { x: scrollAnim } }
         }
       ])}
     >
