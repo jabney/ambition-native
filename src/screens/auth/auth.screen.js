@@ -4,12 +4,12 @@ import { View, Text, Animated, Keyboard, ScrollView, Dimensions } from 'react-na
 import AmbitionLogo from 'src/components/ambition-logo'
 import AuthForm from 'src/components/auth-form'
 
-import styles from './signin.styles'
+import styles from './auth.styles'
 
 /**
  * Display a signin screen.
  */
-const SigninScreen = ({ navigation }) => {
+const AuthScreen = ({ navigation }) => {
   const [logoValue, setLogoValue] = useState(1)
 
   const [scrollEnabled, setScrollEnabled] = useState(false)
@@ -152,4 +152,4 @@ const SigninScreen = ({ navigation }) => {
   </Animated.View>
 }
 
-export default SigninScreen
+export default AuthScreen

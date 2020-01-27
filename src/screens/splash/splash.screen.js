@@ -23,7 +23,7 @@ const SplashScreen = ({ navigation }) => {
       Animated.timing(animation, { toValue: 1, duration: 750, easing: Easing.bounce, useNativeDriver: true }),
     ]).start(() => {
       // Load signin screen when animation finishes.
-      navigation.navigate('SigninScreen')
+      navigation.navigate('AuthScreen')
     })
   }
 

@@ -5,11 +5,11 @@ import { createStackNavigator } from 'react-navigation-stack'
 import navigationService from './services/navigation.service'
 
 import SplashScreen from './screens/splash'
-import SigninScreen from './screens/signin'
+import AuthScreen from './screens/auth'
 
 const mainNavigator = createSwitchNavigator({
   SplashScreen: SplashScreen,
-  SigninScreen: SigninScreen,
+  AuthScreen: AuthScreen,
 })
 
 const AppNavigator = createAppContainer(mainNavigator)
