@@ -11,6 +11,14 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     paddingHorizontal: '15%',
   },
+  title: {
+    fontSize: 18,
+    textAlign: 'center',
+    backgroundColor: 'white',
+    paddingVertical: 2,
+    borderRadius: 5,
+    overflow: 'hidden',
+  }
 })
 
 export default styles

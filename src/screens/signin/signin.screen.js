@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { View, Animated, Keyboard, ScrollView, Dimensions } from 'react-native'
+import { View, Text, Animated, Keyboard, ScrollView, Dimensions } from 'react-native'
 
 import AmbitionLogo from 'src/components/ambition-logo'
-import SigninForm from 'src/components/signin-form'
+import AuthForm from 'src/components/auth-form'
 
 import styles from './signin.styles'
 
@@ -23,8 +23,7 @@ const SigninScreen = ({ navigation }) => {
 
   const scrollView = useRef(/**@type {ScrollView}*/(null))
 
-  const [signinForm, setSigninForm] = useState(() => ({ email: '', password: '' }))
-  const [signupForm, setSignupForm] = useState(() => ({ email: '', password: '' }))
+  const [authForm, setAuthForm] = useState(() => ({ email: '', password: '' }))
 
   const { width } = Dimensions.get('window')
 
@@ -131,12 +130,21 @@ const SigninScreen = ({ navigation }) => {
     >
       <View style={pageStyle}>
         <View style={[styles.formView]}>
-          <SigninForm model={signinForm} onChange={setSigninForm} onSignin={dismiss} onSignup={next} value={signinFormValue} />
+          <AuthForm model={authForm} onChange={setAuthForm}
+            buttonText='Sign In' linkText='Need an account? Sign up...'
+            onButton={dismiss} onLink={next}
+            value={signinFormValue}
+          />
         </View>
       </View>
       <View style={pageStyle}>
         <View style={[styles.formView]}>
-          <SigninForm model={signupForm} onChange={setSignupForm} onSignin={dismiss} onSignup={prev} value={signupFormValue}/>
+          <Text style={styles.title}>Create an Account</Text>
+          <AuthForm model={authForm} onChange={setAuthForm}
+            buttonText='Sign Up' linkText='Have an account? Sign in...'
+            onButton={dismiss} onLink={prev}
+            value={signupFormValue}
+          />
         </View>
       </View>
     </ScrollView>
