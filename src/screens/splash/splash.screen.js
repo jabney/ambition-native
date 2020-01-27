@@ -18,7 +18,7 @@ const SplashScreen = ({ navigation }) => {
    */
   const start = () => {
     Animated.sequence([
-      Animated.timing(fadeIn, { toValue: 1, duration: 750, easing: Easing.bounce, useNativeDriver: true }),
+      Animated.spring(fadeIn, { toValue: 1, bounciness: 10, useNativeDriver: true }),
       Animated.delay(250),
       Animated.timing(animation, { toValue: 1, duration: 750, easing: Easing.bounce, useNativeDriver: true }),
     ]).start(() => {
