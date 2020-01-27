@@ -9,22 +9,19 @@ import styles from './auth-form.styles'
 /**
  *
  */
-const AuthForm = ({ model, onChange, buttonText, linkText, onButton, onLink, value=1 }) => {
+const AuthForm = ({ model, onChange, buttonText, linkText, onButton, onLink, animation }) => {
   const [email, setEmail] = useState(model && model.emeil || '')
   const [password, setPassword] = useState(model && model.password || '')
-  const [formAnim] = useState(() => new Animated.Value(0))
 
   useEffect(() => void onChange({ email, password }), [email, password])
 
-  formAnim.setValue(value)
-
-  const emailAnim = formAnim.interpolate({
+  const emailAnim = animation.interpolate({
     inputRange: [0, 0.25],
     outputRange: [0, 1],
     extrapolate: 'clamp',
   })
 
-  const passAnim = formAnim.interpolate({
+  const passAnim = animation.interpolate({
     inputRange: [0.25, 0.5],
     outputRange: [0, 1],
     extrapolate: 'clamp',
@@ -42,7 +39,7 @@ const AuthForm = ({ model, onChange, buttonText, linkText, onButton, onLink, val
     extrapolate: 'clamp',
   })
 
-  const buttonAnim = formAnim.interpolate({
+  const buttonAnim = animation.interpolate({
     inputRange: [0.5, 0.75],
     outputRange: [0, 1],
     extrapolate: 'clamp',
@@ -60,7 +57,7 @@ const AuthForm = ({ model, onChange, buttonText, linkText, onButton, onLink, val
     extrapolate: 'clamp',
   })
 
-  const linkAnim = formAnim.interpolate({
+  const linkAnim = animation.interpolate({
     inputRange: [0.75, 1],
     outputRange: [0, 1],
   })

@@ -12,28 +12,25 @@ import styles from './signin.styles'
 const SigninScreen = ({ navigation }) => {
   const [logoValue, setLogoValue] = useState(1)
 
-  const [signinFormValue, setSigninFormValue] = useState(0)
-  const [signupFormValue, setSignupFormValue] = useState(0)
-
   const [scrollEnabled, setScrollEnabled] = useState(false)
 
   const [scrollAnim] = useState(() => new Animated.Value(0))
-  const [formAnim] = useState(() => new Animated.Value(0))
+  const [signinAnim] = useState(() => new Animated.Value(0))
+  const [signupAnim] = useState(() => new Animated.Value(0))
   const [dismissAnim] = useState(() => new Animated.Value(0))
 
   const scrollView = useRef(/**@type {ScrollView}*/(null))
 
-  const [authForm, setAuthForm] = useState(() => ({ email: '', password: '' }))
+  const [authModel, setAuthModel] = useState(() => ({ email: '', password: '' }))
 
   const { width } = Dimensions.get('window')
 
   const start = () => {
     Animated.sequence([
       Animated.delay(250),
-      Animated.timing(formAnim, { toValue: 1, duration: 750, useNativeDriver: true }),
+      Animated.timing(signinAnim, { toValue: 1, duration: 750, useNativeDriver: true }),
     ]).start(() => {
       setScrollEnabled(true)
-      formAnim.removeAllListeners()
     })
   }
 
@@ -51,8 +48,17 @@ const SigninScreen = ({ navigation }) => {
   /**
    * @type {Animated.AnimatedInterpolation & {__getValue: () => number}}
    */
-  const formInterpolator = (scrollAnim.interpolate({
+  const signinInterpolator = (scrollAnim.interpolate({
     inputRange: [-width, 0, width],
+    outputRange: [0, 1, 0],
+    extrapolate: 'clamp',
+  }))
+
+  /**
+   * @type {Animated.AnimatedInterpolation & {__getValue: () => number}}
+   */
+  const signupInterpolator = (scrollAnim.interpolate({
+    inputRange: [0, width, 2*width],
     outputRange: [0, 1, 0],
     extrapolate: 'clamp',
   }))
@@ -61,18 +67,11 @@ const SigninScreen = ({ navigation }) => {
   useEffect(() => {
     scrollAnim.addListener(({ value }) => {
       setLogoValue(logoInterpolator.__getValue())
-      setSigninFormValue(formInterpolator.__getValue())
-      setSignupFormValue(1 - formInterpolator.__getValue())
+      signinAnim.setValue(signinInterpolator.__getValue())
+      signupAnim.setValue(signupInterpolator.__getValue())
     })
 
-    formAnim.addListener(({ value }) => {
-      setSigninFormValue(value)
-    })
-
-    return () => {
-      scrollAnim.removeAllListeners()
-      formAnim.removeAllListeners()
-    }
+    return () => scrollAnim.removeAllListeners()
   }, [])
 
   /**
@@ -130,21 +129,21 @@ const SigninScreen = ({ navigation }) => {
     >
       <View style={pageStyle}>
         <View style={[styles.formView]}>
-          <AuthForm model={authForm} onChange={setAuthForm}
+          <AuthForm model={authModel} onChange={setAuthModel}
             buttonText='Sign In' linkText='Need an account? Sign up...'
             onButton={dismiss} onLink={next}
-            value={signinFormValue}
+            animation={signinAnim}
           />
         </View>
       </View>
       <View style={pageStyle}>
         <View style={[styles.formView]}>
           <Text style={styles.title}>Create an Account</Text>
-          <AuthForm model={authForm} onChange={setAuthForm}
+          {<AuthForm model={authModel} onChange={setAuthModel}
             buttonText='Sign Up' linkText='Have an account? Sign in...'
             onButton={dismiss} onLink={prev}
-            value={signupFormValue}
-          />
+            animation={signupAnim}
+          />}
         </View>
       </View>
     </ScrollView>
