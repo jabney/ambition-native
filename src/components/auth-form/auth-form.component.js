@@ -4,12 +4,12 @@ import SlickInput from 'src/components/slick-input'
 import Button from 'src/components/button'
 import NavLink from 'src/components/nav-link'
 
-import styles from './signin-form.styles'
+import styles from './auth-form.styles'
 
 /**
  *
  */
-const SigninForm = ({ model, onChange, onSignin, onSignup, value=1 }) => {
+const AuthForm = ({ model, onChange, buttonText, linkText, onButton, onLink, value=1 }) => {
   const [email, setEmail] = useState(model && model.emeil || '')
   const [password, setPassword] = useState(model && model.password || '')
   const [formAnim] = useState(() => new Animated.Value(0))
@@ -108,9 +108,9 @@ const SigninForm = ({ model, onChange, onSignin, onSignup, value=1 }) => {
   return <View style={styles.container}>
     <SlickInput value={email} label='Email' containerStyle={emailStyles} inputStyle={styles.input} onChangeText={setEmail} />
     <SlickInput value={password} label='Password' containerStyle={passStyles} inputStyle={styles.input} onChangeText={setPassword} secureTextEntry={true} />
-    <Button title='Sign In' containerStyle={[styles.button, buttonStyles]} onPress={onSignin} />
-    <NavLink text='Need an account? Sign up...' containerStyle={[styles.link, linkStyles]} onPress={onSignup} />
+    <Button title={buttonText} containerStyle={[styles.button, buttonStyles]} onPress={onButton} />
+    <NavLink text={linkText} containerStyle={[styles.link, linkStyles]} onPress={onLink} />
   </View>
 }
 
-export default SigninForm
+export default AuthForm
