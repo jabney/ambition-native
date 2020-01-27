@@ -30,7 +30,7 @@ const SigninScreen = ({ navigation }) => {
   const start = () => {
     Animated.sequence([
       Animated.delay(250),
-      Animated.timing(formAnim, { toValue: 1, duration: 1000, useNativeDriver: true }),
+      Animated.timing(formAnim, { toValue: 1, duration: 750, useNativeDriver: true }),
     ]).start(() => {
       setScrollEnabled(true)
       formAnim.removeAllListeners()

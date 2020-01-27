@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     textAlign: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#fffa',
     paddingVertical: 2,
     borderRadius: 5,
     overflow: 'hidden',
