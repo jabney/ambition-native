@@ -83,16 +83,18 @@ const SigninScreen = ({ navigation }) => {
       .start(() => {})
   }
 
-  const page = (num) => {
-    return { x: (num-1) * width, y: 0 }
+  /**
+   * Scroll to page 2.
+   */
+  const page2 = () => {
+    scrollView.current.scrollTo({ x: width, y: 0 })
   }
 
-  const next = () => {
-    scrollView.current.scrollTo(page(2))
-  }
-
-  const prev = () => {
-    scrollView.current.scrollTo(page(1))
+  /**
+   * Scroll to page 1.
+   */
+  const page1 = () => {
+    scrollView.current.scrollTo({ x: 0, y: 0 })
   }
 
   const viewScale = dismissAnim.interpolate({
@@ -131,7 +133,7 @@ const SigninScreen = ({ navigation }) => {
         <View style={[styles.formView]}>
           <AuthForm model={authModel} onChange={setAuthModel}
             buttonText='Sign In' linkText='Need an account? Sign up...'
-            onButton={dismiss} onLink={next}
+            onButton={dismiss} onLink={page2}
             animation={signinAnim}
           />
         </View>
@@ -141,7 +143,7 @@ const SigninScreen = ({ navigation }) => {
           <Text style={styles.title}>Create an Account</Text>
           {<AuthForm model={authModel} onChange={setAuthModel}
             buttonText='Sign Up' linkText='Have an account? Sign in...'
-            onButton={dismiss} onLink={prev}
+            onButton={dismiss} onLink={page1}
             animation={signupAnim}
           />}
         </View>
