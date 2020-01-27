@@ -3,6 +3,9 @@ import { View, Text, TouchableOpacity, Animated } from 'react-native'
 
 import styles from './nav-link.styles'
 
+/**
+ * A simple linktext component.
+ */
 const NavLink = ({ text, onPress, style, containerStyle }) => (
   <Animated.View style={[styles.container, containerStyle]}>
     <TouchableOpacity onPress={onPress} activeOpacity={0.5}>

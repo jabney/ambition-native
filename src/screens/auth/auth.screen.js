@@ -7,7 +7,7 @@ import AuthForm from 'src/components/auth-form'
 import styles from './auth.styles'
 
 /**
- * Display a signin screen.
+ * Auth screen for signin and signup.
  */
 const AuthScreen = ({ navigation }) => {
   const [logoValue, setLogoValue] = useState(1)

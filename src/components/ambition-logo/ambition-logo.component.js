@@ -5,6 +5,9 @@ import { interpolate, combine, separate, splitPathString } from 'flubber/index'
 
 import styles from './ambition-logo.styles'
 
+/**
+ * Define animation groups to transition from orchid to butterfly.
+ */
 const groups = [
   {
     orchid: 'M315.606,261c-1.105-4.009-2.206-8.175-3.308-12.624-9.178-13.6-13.806-23.029-13.806-28.237q0-6.324,5.3-13.36c6.8,15.828,17.457,40.753,29.561,69.389-1.048-.447-2.154-0.9-3.372-1.369C322.25,272.4,317.456,267.816,315.606,261Zm25.625,97.08H330.394q-6.2-34.764-16.917-53.616-21.669-38.057-33.878-50.71c-2.021-2.059-3.907-3.957-5.681-5.718l3.229-7.481q9.92,3.658,18.875,14.926,2.132,1.725,20.1,29.378A163.549,163.549,0,0,1,338.353,339C339.283,345.331,340.263,351.711,341.231,358.079ZM360.4,342.952q3.046,7.368,6.042,14.664H356.9c0.519-2.154,1.041-4.358,1.569-6.649Q359.424,346.806,360.4,342.952ZM252.116,301.635q24.169,5.637,41.757,40.291,3.831,7.427,7.183,15.69h-72.97C235.976,339.187,244.168,320.111,252.116,301.635Z',
@@ -36,6 +39,9 @@ const groups = [
   },
 ]
 
+/**
+ * Create interpolators for each animation group.
+ */
 const group0interpolator = combine(splitPathString(groups[0].orchid), groups[0].butterfly, { single: true, maxSegmentLength: 5 })
 const group1interpolator = combine(splitPathString(groups[1].orchid), groups[1].butterfly, { single: true, maxSegmentLength: 5 })
 const group2interpolator = combine(splitPathString(groups[2].orchid), groups[2].butterfly, { single: true, maxSegmentLength: 10 })
@@ -46,6 +52,9 @@ const group6interpolator = interpolate(groups[6].orchid, groups[6].butterfly, { 
 
 const ambitionPath = 'M375.5,526.49V515.563c0-.047,43.718.933,42.492-30.027-0.344-8.7-16.925-52.018-37.653-103.086H213.775c-20.617,48.289-37.325,87.947-38.941,93.378-12.364,41.566,48.676,39.735,48.676,39.735V526.49H88.411V515.563s30.111-2.1,46.688-26.821C152.981,462.07,309.934,88.411,309.934,88.411h10.927S474.844,459.118,488.742,481.788c22.738,37.091,54.635,33.775,54.635,33.775V526.49H375.5ZM298.013,186.755S257.657,279.928,223.119,360.6h148.29C337.689,278.511,298.013,186.755,298.013,186.755Z'
 
+/**
+ * Ambition animated logo.
+ */
 const AmbitionLogo = ({ value, aColor = '#ddd', color='#eee', style={} }) => {
   return <Animated.View style={[StyleSheet.absoluteFill, styles.container, style]}>
   <Svg style={styles.svg} viewBox='0 0 600 600'>

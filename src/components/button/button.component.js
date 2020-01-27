@@ -4,7 +4,7 @@ import { Text, TouchableOpacity, Animated } from 'react-native'
 import styles from './button.styles'
 
 /**
- *
+ * A simple button component.
  */
 const Button = ({ title, onPress, style, containerStyle }) => (
   <Animated.View style={[styles.container, containerStyle]}>

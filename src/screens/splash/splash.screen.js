@@ -6,7 +6,7 @@ import AmbitionLogo from 'src/components/ambition-logo'
 import styles from './splash.styles'
 
 /**
- *
+ * Ambition splash screen.
  */
 const SplashScreen = ({ navigation }) => {
   const [logoValue, setLogoValue] = useState(0)

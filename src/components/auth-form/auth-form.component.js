@@ -7,7 +7,7 @@ import NavLink from 'src/components/nav-link'
 import styles from './auth-form.styles'
 
 /**
- *
+ * Render email/pass form components with a button and link.
  */
 const AuthForm = ({ model, onChange, buttonText, linkText, onButton, onLink, animation }) => {
   const [email, setEmail] = useState(model && model.emeil || '')
@@ -15,11 +15,26 @@ const AuthForm = ({ model, onChange, buttonText, linkText, onButton, onLink, ani
 
   useEffect(() => void onChange({ email, password }), [email, password])
 
+  /**
+   * Email field is animated in the first 1/4 of the animation value.
+   */
+
   const emailAnim = animation.interpolate({
     inputRange: [0, 0.25],
     outputRange: [0, 1],
     extrapolate: 'clamp',
   })
+
+  const emailStyles = {
+    opacity: emailAnim,
+    transform: [
+      { scale: emailAnim },
+    ]
+  }
+
+  /**
+   * Password field is animated in the second 1/4 of the animation value.
+   */
 
   const passAnim = animation.interpolate({
     inputRange: [0.25, 0.5],
@@ -39,6 +54,17 @@ const AuthForm = ({ model, onChange, buttonText, linkText, onButton, onLink, ani
     extrapolate: 'clamp',
   })
 
+  const passStyles = {
+    opacity: passOpacity,
+    transform: [
+      { translateY: passDrop },
+    ]
+  }
+
+  /**
+   * Button is animated in the third 1/4 of the animation value.
+   */
+
   const buttonAnim = animation.interpolate({
     inputRange: [0.5, 0.75],
     outputRange: [0, 1],
@@ -57,6 +83,17 @@ const AuthForm = ({ model, onChange, buttonText, linkText, onButton, onLink, ani
     extrapolate: 'clamp',
   })
 
+  const buttonStyles  = {
+    opacity: buttonOpacity,
+    transform: [
+      { translateY: buttonDrop }
+    ]
+  }
+
+  /**
+   * Link is animated in the third 1/4 of the animation value.
+   */
+
   const linkAnim = animation.interpolate({
     inputRange: [0.75, 1],
     outputRange: [0, 1],
@@ -73,27 +110,6 @@ const AuthForm = ({ model, onChange, buttonText, linkText, onButton, onLink, ani
     outputRange: [-50, 0],
     extrapolate: 'clamp',
   })
-
-  const emailStyles = {
-    opacity: emailAnim,
-    transform: [
-      { scale: emailAnim },
-    ]
-  }
-
-  const passStyles = {
-    opacity: passOpacity,
-    transform: [
-      { translateY: passDrop },
-    ]
-  }
-
-  const buttonStyles  = {
-    opacity: buttonOpacity,
-    transform: [
-      { translateY: buttonDrop }
-    ]
-  }
 
   const linkStyles  = {
     opacity: linkOpacity,
