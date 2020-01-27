@@ -9,18 +9,18 @@ import styles from './splash.styles'
  *
  */
 const SplashScreen = ({ navigation }) => {
-  const [value, setValue] = useState(0)
-  const [fadeIn] = useState(() => new Animated.Value(0))
-  const [animation] = useState(() => new Animated.Value(0))
+  const [logoValue, setLogoValue] = useState(0)
+  const [fadeInAnim] = useState(() => new Animated.Value(0))
+  const [logoAnim] = useState(() => new Animated.Value(0))
 
   /**
    * Start the logo animation.
    */
   const start = () => {
     Animated.sequence([
-      Animated.spring(fadeIn, { toValue: 1, bounciness: 10, useNativeDriver: true }),
+      Animated.spring(fadeInAnim, { toValue: 1, bounciness: 10, useNativeDriver: true }),
       Animated.delay(250),
-      Animated.timing(animation, { toValue: 1, duration: 750, easing: Easing.bounce, useNativeDriver: true }),
+      Animated.timing(logoAnim, { toValue: 1, duration: 750, easing: Easing.bounce, useNativeDriver: true }),
     ]).start(() => {
       // Load signin screen when animation finishes.
       navigation.navigate('AuthScreen')
@@ -31,24 +31,24 @@ const SplashScreen = ({ navigation }) => {
     // Start the animation.
     start()
     // Listen for animation values.
-    animation.addListener(({ value }) => void setValue(value))
-    return () => animation.removeAllListeners()
+    logoAnim.addListener(({ value }) => void setLogoValue(value))
+    return () => logoAnim.removeAllListeners()
   }, [])
 
-  const zoomIn = fadeIn.interpolate({
+  const zoomIn = fadeInAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [2, 1],
   })
 
   const logoStyles = {
-    opacity: fadeIn,
+    opacity: fadeInAnim,
     transform: [
       { scale: zoomIn },
     ],
   }
 
   return <View style={styles.container}>
-    <AmbitionLogo value={value} style={logoStyles} />
+    <AmbitionLogo value={logoValue} style={logoStyles} />
   </View>
 }
 
