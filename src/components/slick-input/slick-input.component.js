@@ -1,36 +1,19 @@
 import React, { useState } from 'react'
 import { TextInput, Animated } from 'react-native'
-import pad from './pad'
+import labelAnimations from './slick-input.animations'
 
 import styles from './slick-input.styles'
 
+/**
+ * Animated input field.
+ */
 const SlickInput = ({ label, value, onChangeText, containerStyle, inputStyle, ...props }) => {
   const [animation] = useState(() => new Animated.Value(0))
+  const [anims] = useState(() => labelAnimations(animation))
 
-  const labelPos = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, -pad.top - pad.vertical - pad.border - 2],
-  })
-
-  const labelColor = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['gray', 'black'],
-  })
-
-  const labelSize = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [14, 12],
-  })
-
-  const labelContainer = {
-    transform: [{ translateY: labelPos }],
-  }
-
-  const labelText = {
-    color: labelColor,
-    fontSize: labelSize,
-  }
-
+  /**
+   * Move the field label in/out of input.
+   */
   const moveLabel = (focused = false) => {
     if (value.length > 0) {
       return void animation.setValue(1)
@@ -43,23 +26,16 @@ const SlickInput = ({ label, value, onChangeText, containerStyle, inputStyle, ..
     }
   }
 
-  /**
-   *
-   */
-  const onText = (value) => {
-    onChangeText(value)
-  }
-
   return <Animated.View style={[styles.container, containerStyle]}>
     <TextInput style={[styles.input, inputStyle]}
       value={value}
-      onChangeText={onText}
+      onChangeText={onChangeText}
       onFocus={() => moveLabel(true)}
       onBlur={() => moveLabel(false)}
       {...props}
     />
-    <Animated.View style={[styles.labelContainer, labelContainer]} pointerEvents='none'>
-      <Animated.Text style={[styles.label, labelText]}>{label}</Animated.Text>
+    <Animated.View style={[styles.labelContainer, anims.container]} pointerEvents='none'>
+      <Animated.Text style={[styles.label, anims.text]}>{label}</Animated.Text>
     </Animated.View>
   </Animated.View>
 }

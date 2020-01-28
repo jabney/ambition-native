@@ -11,17 +11,14 @@ import styles from './auth.styles'
  */
 const AuthScreen = ({ navigation }) => {
   const [logoValue, setLogoValue] = useState(1)
-
   const [scrollEnabled, setScrollEnabled] = useState(false)
+  const scrollView = useRef(/**@type {ScrollView}*/(null))
+  const [authModel, setAuthModel] = useState(() => ({ email: '', password: '' }))
 
   const [scrollAnim] = useState(() => new Animated.Value(0))
   const [signinAnim] = useState(() => new Animated.Value(0))
   const [signupAnim] = useState(() => new Animated.Value(0))
   const [dismissAnim] = useState(() => new Animated.Value(0))
-
-  const scrollView = useRef(/**@type {ScrollView}*/(null))
-
-  const [authModel, setAuthModel] = useState(() => ({ email: '', password: '' }))
 
   const { width } = Dimensions.get('window')
 
@@ -84,17 +81,10 @@ const AuthScreen = ({ navigation }) => {
   }
 
   /**
-   * Scroll to page 2.
+   * Scroll to a page [0, n].
    */
-  const page2 = () => {
-    scrollView.current.scrollTo({ x: width, y: 0 })
-  }
-
-  /**
-   * Scroll to page 1.
-   */
-  const page1 = () => {
-    scrollView.current.scrollTo({ x: 0, y: 0 })
+  const page = (num) => {
+    scrollView.current.scrollTo({ x: num*width, y: 0 })
   }
 
   const viewScale = dismissAnim.interpolate({
@@ -133,7 +123,7 @@ const AuthScreen = ({ navigation }) => {
         <View style={[styles.formView]}>
           <AuthForm model={authModel} onChange={setAuthModel}
             buttonText='Sign In' linkText='Need an account? Sign up...'
-            onButton={dismiss} onLink={page2}
+            onButton={dismiss} onLink={() => page(1)}
             animation={signinAnim}
           />
         </View>
@@ -143,7 +133,7 @@ const AuthScreen = ({ navigation }) => {
           <Text style={styles.title}>Create an Account</Text>
           <AuthForm model={authModel} onChange={setAuthModel}
             buttonText='Sign Up' linkText='Have an account? Sign in...'
-            onButton={dismiss} onLink={page1}
+            onButton={dismiss} onLink={() => page(0)}
             animation={signupAnim}
           />
         </View>
