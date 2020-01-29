@@ -58,7 +58,6 @@ const ambitionPath = 'M375.5,526.49V515.563c0-.047,43.718.933,42.492-30.027-0.34
 const AmbitionLogo = ({ value, aColor = '#ddd', color='#eee', style={} }) => {
   return <Animated.View style={[StyleSheet.absoluteFill, styles.container, style]}>
   <Svg style={styles.svg} viewBox='0 0 600 600'>
-    <Path d={ambitionPath} fill={aColor} />
     <Path d={group0interpolator(value)} fill={color} />
     <Path d={group1interpolator(value)} fill={color} />
     <Path d={group2interpolator(value)} fill={color} />
@@ -66,6 +65,7 @@ const AmbitionLogo = ({ value, aColor = '#ddd', color='#eee', style={} }) => {
     <Path d={group4interpolator(value)} fill={color} />
     <Path d={group5interpolator(value)} fill={color} />
     <Path d={group6interpolator(value)} fill={color} />
+    <Path d={ambitionPath} fill={aColor} />
   </Svg>
 </Animated.View>
 }
