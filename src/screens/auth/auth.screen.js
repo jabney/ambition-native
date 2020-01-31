@@ -5,7 +5,8 @@ import { connect } from 'react-redux'
 
 import AmbitionLogo from 'src/components/ambition-logo'
 import AuthForm from 'src/components/auth-form'
-
+import useAnimations from './use-animations'
+import viewAnimations from './auth.animations'
 import styles from './auth.styles'
 
 /**
@@ -16,70 +17,35 @@ const AuthScreen = ({ navigation, setUser }) => {
   const [scrollEnabled, setScrollEnabled] = useState(false)
   const [authModel, setAuthModel] = useState(() => ({ email: '', password: '' }))
 
-  const [scrollAnim] = useState(() => new Animated.Value(0))
-  const [signinAnim] = useState(() => new Animated.Value(0))
-  const [signupAnim] = useState(() => new Animated.Value(0))
-  const [dismissAnim] = useState(() => new Animated.Value(0))
+  const [animation] = useState(() => new Animated.Value(0))
+  const [viewStyles] = useState(() => viewAnimations(animation))
+
+  // Set up form and scroll animations/interpolations.
+  const anims = useAnimations(setLogoValue)
 
   const scrollView = useRef(/**@type {ScrollView}*/(null))
 
-  const { width } = Dimensions.get('window')
-
+  /**
+   * Start the form intro animation.
+   */
   const start = () => {
     Animated.sequence([
       Animated.delay(250),
-      Animated.timing(signinAnim, { toValue: 1, duration: 750, useNativeDriver: true }),
+      Animated.timing(anims.signin, { toValue: 1, duration: 750, useNativeDriver: true }),
     ]).start(() => {
       setScrollEnabled(true)
     })
   }
 
+  // Trigger start animation.
   useEffect(() => void start(), [])
-
-  /**
-   * @type {Animated.AnimatedInterpolation & {__getValue: () => number}}
-   */
-  const logoInterpolator = (scrollAnim.interpolate({
-    inputRange: [-width, 0, width, 2*width, 3*width, 4*width],
-    outputRange: [0, 1, 0, 1, 0, 1],
-    extrapolate: 'clamp',
-  }))
-
-  /**
-   * @type {Animated.AnimatedInterpolation & {__getValue: () => number}}
-   */
-  const signinInterpolator = (scrollAnim.interpolate({
-    inputRange: [-width, 0, width],
-    outputRange: [0, 1, 0],
-    extrapolate: 'clamp',
-  }))
-
-  /**
-   * @type {Animated.AnimatedInterpolation & {__getValue: () => number}}
-   */
-  const signupInterpolator = (scrollAnim.interpolate({
-    inputRange: [0, width, 2*width],
-    outputRange: [0, 1, 0],
-    extrapolate: 'clamp',
-  }))
-
-  // Set up animation listeners.
-  useEffect(() => {
-    scrollAnim.addListener(({ value }) => {
-      setLogoValue(logoInterpolator.__getValue())
-      signinAnim.setValue(signinInterpolator.__getValue())
-      signupAnim.setValue(signupInterpolator.__getValue())
-    })
-
-    return () => scrollAnim.removeAllListeners()
-  }, [])
 
   /**
    * Animate away the signin screen.
    */
   const dismiss = () => {
     Keyboard.dismiss()
-    Animated.timing(dismissAnim, { toValue: 1, duration: 300, useNativeDriver: true })
+    Animated.timing(animation, { toValue: 1, duration: 300, useNativeDriver: true })
       .start(() => {})
   }
 
@@ -88,7 +54,7 @@ const AuthScreen = ({ navigation, setUser }) => {
    */
   const signin = () => {
     setUser(authModel)
-    // dismiss()
+    dismiss()
   }
 
   /**
@@ -99,28 +65,13 @@ const AuthScreen = ({ navigation, setUser }) => {
     dismiss()
   }
 
+  const { width } = Dimensions.get('window')
+
   /**
    * Scroll to a page [0, n].
    */
   const page = (num) => {
     scrollView.current.scrollTo({ x: num*width, y: 0 })
-  }
-
-  const viewScale = dismissAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 0],
-  })
-
-  const viewOpacity = dismissAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 0],
-  })
-
-  const viewStyles = {
-    opacity: viewOpacity,
-    transform: [
-      { scale: viewScale },
-    ]
   }
 
   const pageStyle = { width }
@@ -135,7 +86,7 @@ const AuthScreen = ({ navigation, setUser }) => {
       showsHorizontalScrollIndicator={false}
       onScroll={Animated.event([
         {
-          nativeEvent: { contentOffset: { x: scrollAnim } }
+          nativeEvent: { contentOffset: { x: anims.scroll } }
         }
       ])}
     >
@@ -144,7 +95,7 @@ const AuthScreen = ({ navigation, setUser }) => {
           <AuthForm model={authModel} onChange={setAuthModel}
             buttonText='Sign In' linkText='Need an account? Sign up...'
             onButton={signin} onLink={() => page(1)}
-            animation={signinAnim}
+            animation={anims.signin}
             animType='drop'
           />
         </View>
@@ -155,7 +106,7 @@ const AuthScreen = ({ navigation, setUser }) => {
           <AuthForm model={authModel} onChange={setAuthModel}
             buttonText='Sign Up' linkText='Have an account? Sign in...'
             onButton={signup} onLink={() => page(0)}
-            animation={signupAnim}
+            animation={anims.signup}
             animType='drop'
           />
         </View>
