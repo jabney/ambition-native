@@ -14,13 +14,14 @@ import styles from './auth.styles'
 const AuthScreen = ({ navigation, setUser }) => {
   const [logoValue, setLogoValue] = useState(1)
   const [scrollEnabled, setScrollEnabled] = useState(false)
-  const scrollView = useRef(/**@type {ScrollView}*/(null))
   const [authModel, setAuthModel] = useState(() => ({ email: '', password: '' }))
 
   const [scrollAnim] = useState(() => new Animated.Value(0))
   const [signinAnim] = useState(() => new Animated.Value(0))
   const [signupAnim] = useState(() => new Animated.Value(0))
   const [dismissAnim] = useState(() => new Animated.Value(0))
+
+  const scrollView = useRef(/**@type {ScrollView}*/(null))
 
   const { width } = Dimensions.get('window')
 
@@ -131,6 +132,7 @@ const AuthScreen = ({ navigation, setUser }) => {
       pagingEnabled
       scrollEventThrottle={16}
       scrollEnabled={scrollEnabled}
+      showsHorizontalScrollIndicator={false}
       onScroll={Animated.event([
         {
           nativeEvent: { contentOffset: { x: scrollAnim } }
