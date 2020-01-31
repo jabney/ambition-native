@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { View, Text, Animated, Keyboard, ScrollView, Dimensions } from 'react-native'
+import { setUser } from 'src/store/actions'
+import { connect } from 'react-redux'
 
 import AmbitionLogo from 'src/components/ambition-logo'
 import AuthForm from 'src/components/auth-form'
@@ -9,7 +11,7 @@ import styles from './auth.styles'
 /**
  * Auth screen for signin and signup.
  */
-const AuthScreen = ({ navigation }) => {
+const AuthScreen = ({ navigation, setUser }) => {
   const [logoValue, setLogoValue] = useState(1)
   const [scrollEnabled, setScrollEnabled] = useState(false)
   const scrollView = useRef(/**@type {ScrollView}*/(null))
@@ -81,6 +83,22 @@ const AuthScreen = ({ navigation }) => {
   }
 
   /**
+   *
+   */
+  const signin = () => {
+    setUser(authModel)
+    // dismiss()
+  }
+
+  /**
+   *
+   */
+  const signup = () => {
+    setUser(authModel)
+    dismiss()
+  }
+
+  /**
    * Scroll to a page [0, n].
    */
   const page = (num) => {
@@ -123,8 +141,9 @@ const AuthScreen = ({ navigation }) => {
         <View style={[styles.formView]}>
           <AuthForm model={authModel} onChange={setAuthModel}
             buttonText='Sign In' linkText='Need an account? Sign up...'
-            onButton={dismiss} onLink={() => page(1)}
+            onButton={signin} onLink={() => page(1)}
             animation={signinAnim}
+            animType='drop'
           />
         </View>
       </View>
@@ -133,8 +152,9 @@ const AuthScreen = ({ navigation }) => {
           <Text style={styles.title}>Create an Account</Text>
           <AuthForm model={authModel} onChange={setAuthModel}
             buttonText='Sign Up' linkText='Have an account? Sign in...'
-            onButton={dismiss} onLink={() => page(0)}
+            onButton={signup} onLink={() => page(0)}
             animation={signupAnim}
+            animType='drop'
           />
         </View>
       </View>
@@ -146,4 +166,8 @@ const AuthScreen = ({ navigation }) => {
   </Animated.View>
 }
 
-export default AuthScreen
+const mapDispatch = (dispatch) => ({
+  setUser: (user) => dispatch(setUser(user))
+})
+
+export default connect(null, mapDispatch)(AuthScreen)
