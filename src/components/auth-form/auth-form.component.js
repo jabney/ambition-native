@@ -11,10 +11,10 @@ import styles from './auth-form.styles'
 /**
  * Render email/pass form components with a button and link.
  */
-const AuthForm = ({ model, onChange, buttonText, linkText, onButton, onLink, animation }) => {
+const AuthForm = ({ model, onChange, buttonText, linkText, onButton, onLink, animation, animType }) => {
   const [email, setEmail] = useState(model && model.emeil || '')
   const [password, setPassword] = useState(model && model.password || '')
-  const [anims] = useState(() => formAnimations(animation))
+  const [anims] = useState(() => formAnimations(animation, animType))
 
   // Notify new model when email or password fields change.
   useEffect(() => void onChange({ email, password }), [email, password])
