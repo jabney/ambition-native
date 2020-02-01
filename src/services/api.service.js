@@ -38,7 +38,7 @@ class ApiService {
   /**
    * @param {Credentials} user
    *
-   * @return {Promise<ApiResponse<string>>}
+   * @return {Promise<ApiResponse<void>>}
    */
   signup = async (user) => {
     try {
@@ -47,18 +47,18 @@ class ApiService {
         .send(user)
 
       await tokenSvc.set(token)
-      return [null, token]
+      return [null]
 
     } catch (error) {
       const { body } = error.response
-      return [body, null]
+      return [body]
     }
   }
 
   /**
    * @param {Credentials} user
    *
-   * @return {Promise<ApiResponse<string>>}
+   * @return {Promise<ApiResponse<null>>}
    */
   signin = async (user) => {
     try {
@@ -67,11 +67,11 @@ class ApiService {
         .send(user)
 
       await tokenSvc.set(token)
-      return [null, token]
+      return [null]
 
     } catch (error) {
       const { body } = error.response
-      return [body, null]
+      return [body]
     }
   }
 
@@ -89,11 +89,11 @@ class ApiService {
         .send()
 
       await tokenSvc.clear()
-      return [null, null]
+      return [null]
 
     } catch (error) {
       // Fail signout silently.
-      return [null, null]
+      return [null]
     }
   }
 
@@ -111,11 +111,11 @@ class ApiService {
         .send()
 
       await tokenSvc.clear()
-      return [null, null]
+      return [null]
 
     } catch (error) {
       const { body } = error.response
-      return [body, null]
+      return [body]
     }
   }
 
@@ -149,10 +149,10 @@ class ApiService {
       const { body } = error.response
 
       if (body.status === 401) {
-        return [body, false]
+        return [null, false]
       }
 
-      throw error
+      return [body]
     }
   }
 }

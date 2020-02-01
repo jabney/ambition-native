@@ -5,4 +5,4 @@ export interface ApiError {
   error?: string[]
 }
 
-export type ApiResponse<T=any> = [ApiError, null]|[null, T]
+export type ApiResponse<T=any> = [ApiError]|[null, T]
