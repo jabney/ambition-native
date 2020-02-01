@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { View, Animated, Easing } from 'react-native'
 import { connect } from 'react-redux'
 
-import { scenes } from 'src/constants'
-import { isInitialized, isLoggedIn } from 'src/lib/user'
 import { init } from 'src/store/actions'
 import useInitialization from './use-initialization'
 
@@ -17,17 +15,17 @@ import styles from './splash.styles'
 const SplashScreen = ({ navigation, start, user }) => {
   const [logoValue, setLogoValue] = useState(0)
   const [init, setInit] = useState(false)
-  const [fadeInAnim] = useState(() => new Animated.Value(0))
+  const [introAnim] = useState(() => new Animated.Value(0))
   const [logoAnim] = useState(() => new Animated.Value(0))
 
-  useInitialization(navigation, start, init, user)
+  const viewStyles = useInitialization(navigation, start, init, user)
 
   /**
    * Start the logo animation.
    */
   const animateIn = () => {
     Animated.sequence([
-      Animated.spring(fadeInAnim, { toValue: 1, bounciness: 10, useNativeDriver: true }),
+      Animated.spring(introAnim, { toValue: 1, bounciness: 10, useNativeDriver: true }),
       // Animated.delay(250),
       Animated.timing(logoAnim, { toValue: 1, duration: 750, easing: Easing.bounce, useNativeDriver: true }),
     ]).start(() => setInit(true))
@@ -41,21 +39,21 @@ const SplashScreen = ({ navigation, start, user }) => {
     return () => logoAnim.removeAllListeners()
   }, [])
 
-  const zoomIn = fadeInAnim.interpolate({
+  const zoomIn = introAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [2, 1],
   })
 
   const logoStyles = {
-    opacity: fadeInAnim,
+    opacity: introAnim,
     transform: [
       { scale: zoomIn },
     ],
   }
 
-  return <View style={styles.container}>
+  return <Animated.View style={[styles.container, viewStyles]}>
     <AmbitionLogo value={logoValue} style={logoStyles} />
-  </View>
+  </Animated.View>
 }
 
 const mapState = (state) => ({

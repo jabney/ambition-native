@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { View, Text, Animated, Keyboard, ScrollView, Dimensions } from 'react-native'
-import { setUser } from 'src/store/actions'
+import { signin, signup } from 'src/store/actions'
 import { connect } from 'react-redux'
 
 import AmbitionLogo from 'src/components/ambition-logo'
@@ -8,11 +8,13 @@ import AuthForm from 'src/components/auth-form'
 import useAnimations from './use-animations'
 import viewAnimations from './auth.animations'
 import styles from './auth.styles'
+import { isLoggedIn } from 'src/lib/user'
+import { scenes } from 'src/constants'
 
 /**
  * Auth screen for signin and signup.
  */
-const AuthScreen = ({ navigation, setUser }) => {
+const AuthScreen = ({ navigation, signin, signup, user }) => {
   const [logoValue, setLogoValue] = useState(1)
   const [scrollEnabled, setScrollEnabled] = useState(false)
   const [authModel, setAuthModel] = useState(() => ({ email: '', password: '' }))
@@ -24,6 +26,23 @@ const AuthScreen = ({ navigation, setUser }) => {
   const anims = useAnimations(setLogoValue)
 
   const scrollView = useRef(/**@type {ScrollView}*/(null))
+
+  /**
+   * Animate away the signin screen.
+   */
+  const dismiss = () => {
+    Keyboard.dismiss()
+    Animated.timing(animation, { toValue: 1, duration: 250, useNativeDriver: true })
+      .start(() => {
+        navigation.navigate(scenes.MAIN)
+      })
+  }
+
+  useEffect(() => {
+    if (isLoggedIn(user)) {
+      dismiss()
+    }
+  }, [user])
 
   /**
    * Start the form intro animation.
@@ -41,28 +60,17 @@ const AuthScreen = ({ navigation, setUser }) => {
   useEffect(() => void start(), [])
 
   /**
-   * Animate away the signin screen.
+   *
    */
-  const dismiss = () => {
-    Keyboard.dismiss()
-    Animated.timing(animation, { toValue: 1, duration: 300, useNativeDriver: true })
-      .start(() => {})
+  const onSignin = () => {
+    signin(authModel)
   }
 
   /**
    *
    */
-  const signin = () => {
-    setUser(authModel)
-    dismiss()
-  }
-
-  /**
-   *
-   */
-  const signup = () => {
-    setUser(authModel)
-    dismiss()
+  const onSignup = () => {
+    signup(authModel)
   }
 
   const { width } = Dimensions.get('window')
@@ -94,7 +102,7 @@ const AuthScreen = ({ navigation, setUser }) => {
         <View style={[styles.formView]}>
           <AuthForm model={authModel} onChange={setAuthModel}
             buttonText='Sign In' linkText='Need an account? Sign up...'
-            onButton={signin} onLink={() => page(1)}
+            onButton={onSignin} onLink={() => page(1)}
             animation={anims.signin}
             animType='drop'
           />
@@ -105,7 +113,7 @@ const AuthScreen = ({ navigation, setUser }) => {
           <Text style={styles.title}>Create an Account</Text>
           <AuthForm model={authModel} onChange={setAuthModel}
             buttonText='Sign Up' linkText='Have an account? Sign in...'
-            onButton={signup} onLink={() => page(0)}
+            onButton={onSignup} onLink={() => page(0)}
             animation={anims.signup}
             animType='drop'
           />
@@ -119,8 +127,13 @@ const AuthScreen = ({ navigation, setUser }) => {
   </Animated.View>
 }
 
-const mapDispatch = (dispatch) => ({
-  setUser: (user) => dispatch(setUser(user))
+const mapState = (state) => ({
+  user: state.user,
 })
 
-export default connect(null, mapDispatch)(AuthScreen)
+const mapDispatch = (dispatch) => ({
+  signin: (cred) => dispatch(signin(cred)),
+  signup: (cred) => dispatch(signup(cred)),
+})
+
+export default connect(mapState, mapDispatch)(AuthScreen)
