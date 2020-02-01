@@ -1,0 +1,122 @@
+import superagent from 'superagent'
+import tokenSvc from './token.service'
+import urlPrefix from 'src/lib/middleware/url-prefix.superagent'
+import { API_KEY, API_URL } from 'src/config/environment'
+
+/**
+ * @typedef {import('src/models/user').ICredentials} Credentials
+ */
+
+/**
+ * @typedef {import('src/models/api').ApiError} ApiError
+ */
+
+/**
+ * @template T
+ * @typedef {import('src/models/api').ApiResponse<T>} ApiResponse
+ */
+
+/**
+ * Api key authorization header components.
+ *
+ * @type {[string, string]}
+ */
+const apiKeyHeader = ['Authorization', `Bearer ${API_KEY}`]
+
+/**
+ * Return token authorization header components.
+ *
+ * @returns {[string, string]}
+ */
+const tokenHeader = (token) => ['Authorization', `Bearer ${token}`]
+
+// The superagent http request module instance.
+const agent = superagent.agent().use(urlPrefix(API_URL))
+
+class ApiService {
+  /**
+   * @param {Credentials} user
+   *
+   * @return {Promise<ApiResponse<string>>}
+   */
+  signup = async (user) => {
+    try {
+      const { body: { token } } = await agent.post('/auth/signup')
+        .set(...apiKeyHeader)
+        .send(user)
+
+      await tokenSvc.set(token)
+      return [null, token]
+
+    } catch (error) {
+      const { body } = error.response
+      return [body, null]
+    }
+  }
+
+  /**
+   * @param {Credentials} user
+   *
+   * @return {Promise<ApiResponse<string>>}
+   */
+  signin = async (user) => {
+    try {
+      const { body: { token } } = await agent.post('/auth/signin')
+        .set(...apiKeyHeader)
+        .send(user)
+
+      await tokenSvc.set(token)
+      return [null, token]
+
+    } catch (error) {
+      const { body } = error.response
+      return [body, null]
+    }
+  }
+
+  /**
+   * Sign out with the current token.
+   *
+   * @return {Promise<ApiResponse<null>>}
+   */
+  signout = async () => {
+    try {
+      const token = await tokenSvc.get()
+
+      await agent.get('/auth/signout')
+        .set(...tokenHeader(token))
+        .send()
+
+      await tokenSvc.clear()
+      return [null, null]
+
+    } catch (error) {
+      // Fail signout silently.
+      return [null, null]
+    }
+  }
+
+  /**
+   * Sign out of all devices.
+   *
+   * @return {Promise<ApiResponse<null>>}
+   */
+  signoutAll = async () => {
+    try {
+      const token = await tokenSvc.get()
+
+      await agent.get('/auth/signout/all')
+        .set(...tokenHeader(token))
+        .send()
+
+      await tokenSvc.clear()
+      return [null, null]
+
+    } catch (error) {
+      const { body } = error.response
+      return [body, null]
+    }
+  }
+}
+
+export default Object.freeze(new ApiService())
