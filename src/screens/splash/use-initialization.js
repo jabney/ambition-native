@@ -2,7 +2,13 @@ import { useEffect } from 'react'
 import { isInitialized, isLoggedIn } from 'src/lib/user'
 import { scenes } from 'src/constants'
 
-const useInitialization = (start, navigation, init, user) => {
+/**
+ * @param {() => void} start
+ * @param {*} navigation
+ * @param {boolean} init
+ * @param {*} user
+ */
+const useInitialization = (navigation, start, init, user) => {
   // Initialize the store.
   useEffect(start, [])
 

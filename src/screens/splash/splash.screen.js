@@ -20,7 +20,7 @@ const SplashScreen = ({ navigation, start, user }) => {
   const [fadeInAnim] = useState(() => new Animated.Value(0))
   const [logoAnim] = useState(() => new Animated.Value(0))
 
-  useInitialization(start, navigation, init, user)
+  useInitialization(navigation, start, init, user)
 
   /**
    * Start the logo animation.
