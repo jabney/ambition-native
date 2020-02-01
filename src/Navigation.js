@@ -3,13 +3,14 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import navigationService from './services/navigation.service'
+import { scenes } from './constants'
 
 import SplashScreen from './screens/splash'
 import AuthScreen from './screens/auth'
 
 const mainNavigator = createSwitchNavigator({
-  SplashScreen: SplashScreen,
-  AuthScreen: AuthScreen,
+  [scenes.SPLASH]: SplashScreen,
+  [scenes.AUTH]: AuthScreen,
 })
 
 const AppNavigator = createAppContainer(mainNavigator)
