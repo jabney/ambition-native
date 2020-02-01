@@ -18,6 +18,10 @@ import { API_KEY, API_URL } from 'src/config/environment'
  */
 
 /**
+ * @typedef {import('src/models/user').IUser} User
+ */
+
+/**
  * Api key authorization header components.
  *
  * @type {[string, string]}
@@ -25,11 +29,11 @@ import { API_KEY, API_URL } from 'src/config/environment'
 const apiKeyHeader = ['Authorization', `Bearer ${API_KEY}`]
 
 /**
- * Return token authorization header components.
+ * Return authorization header components.
  *
  * @returns {[string, string]}
  */
-const tokenHeader = (token) => ['Authorization', `Bearer ${token}`]
+const authHeader = (token) => ['Authorization', `Bearer ${token}`]
 
 // The superagent http request module instance.
 const agent = superagent.agent().use(urlPrefix(API_URL))
@@ -85,7 +89,7 @@ class ApiService {
       const token = await tokenSvc.get()
 
       await agent.get('/auth/signout')
-        .set(...tokenHeader(token))
+        .set(...authHeader(token))
         .send()
 
       await tokenSvc.clear()
@@ -107,7 +111,7 @@ class ApiService {
       const token = await tokenSvc.get()
 
       await agent.get('/auth/signout/all')
-        .set(...tokenHeader(token))
+        .set(...authHeader(token))
         .send()
 
       await tokenSvc.clear()
@@ -135,7 +139,7 @@ class ApiService {
 
       // Get the token info object.
       const { body: { expires } } = await agent.get('/auth/token/info')
-        .set(...tokenHeader(token))
+        .set(...authHeader(token))
         .send()
 
       // If the token will expire soon, consider it invalid.
@@ -152,6 +156,27 @@ class ApiService {
         return [null, false]
       }
 
+      return [body]
+    }
+  }
+
+  /**
+   * Fetch the user profile.
+   *
+   * @returns {Promise<ApiResponse<User>>}
+   */
+  user = async () => {
+    try {
+      const token = await tokenSvc.get()
+
+      const { body: { user } } = await agent.get('/user')
+        .set(...authHeader(token))
+        .send()
+
+      return [null, user]
+
+    } catch (error) {
+      const { body } = error.response
       return [body]
     }
   }
