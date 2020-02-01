@@ -4,11 +4,12 @@ import { connect } from 'react-redux'
 
 import { scenes } from 'src/constants'
 import { isInitialized, isLoggedIn } from 'src/lib/user'
+import { init } from 'src/store/actions'
+import useInitialization from './use-initialization'
 
 import AmbitionLogo from 'src/components/ambition-logo'
 
 import styles from './splash.styles'
-import { init } from 'src/store/actions'
 
 /**
  * Ambition splash screen.
@@ -19,20 +20,7 @@ const SplashScreen = ({ navigation, start, user }) => {
   const [fadeInAnim] = useState(() => new Animated.Value(0))
   const [logoAnim] = useState(() => new Animated.Value(0))
 
-  // Initialize the store.
-  useEffect(start, [])
-
-  useEffect(() => {
-    if (!init) { return }
-
-    if (isInitialized(user)) {
-      if (isLoggedIn(user)) {
-        navigation.navigate(scenes.MAIN)
-      } else {
-        navigation.navigate(scenes.AUTH)
-      }
-    }
-  }, [init, user])
+  useInitialization(start, navigation, init, user)
 
   /**
    * Start the logo animation.
