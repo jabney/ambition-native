@@ -24,13 +24,6 @@ import api from 'src/services/api.service'
 export const SET_USER = 'set-user'
 
 /**
- * @param {User} user
- */
-export const setUser = (user) => {
-  return { type: SET_USER, payload: user }
-}
-
-/**
  * @param {Credentials} cred
  *
  * @returns {ThunkAction<User>}
@@ -73,6 +66,28 @@ export const signin = (cred) => async (dispatch) => {
 }
 
 /**
+ * Sign the user out.
+ */
+export const signout = () => async (dispatch) => {
+  await api.signout()
+
+  dispatch({ type: SET_USER, payload: null })
+}
+
+/**
+ * Sign the user out of all devices
+ */
+export const signoutAll = () => async (dispatch) => {
+  const [signoutErr] = await api.signoutAll()
+
+  if (signoutErr) {
+    return console.error(signoutErr)
+  }
+
+  dispatch({ type: SET_USER, payload: null })
+}
+
+/**
  * Initialize the store.
  */
 export const init = () => async (dispatch) => {
@@ -83,7 +98,7 @@ export const init = () => async (dispatch) => {
   }
 
   if (!tokenIsValid) {
-    return dispatch ({ type: SET_USER, payload: {} })
+    return dispatch({ type: SET_USER, payload: {} })
   }
 
   const [userErr, user] = await api.user()
