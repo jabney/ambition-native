@@ -7,7 +7,7 @@
  * @returns {boolean}
  */
 export function isInitialized(user) {
-  return user !== null
+  return user != null
 }
 
 /**
