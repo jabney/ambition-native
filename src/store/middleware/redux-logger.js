@@ -2,7 +2,7 @@
  * Create a string from playload keys with each key/val on a separate line.
  */
 function jsonKeys(payload) {
-  const output = Object.entries(payload)
+  const output = Object.entries(payload || {})
     .map(([key, val]) => `${key}: ${JSON.stringify(val)} `)
   return output.join('')
 }
@@ -24,7 +24,7 @@ function now() {
  * only a description of the array contents are included.
  */
 function pruneObject(obj) {
-  return Object.entries(obj).reduce((map, [key, value]) => {
+  return Object.entries(obj || {}).reduce((map, [key, value]) => {
 
     if (Array.isArray(value)) {
       const typeofFirst = typeof value[0]
