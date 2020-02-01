@@ -62,7 +62,7 @@ class ApiService {
   /**
    * @param {Credentials} user
    *
-   * @return {Promise<ApiResponse<null>>}
+   * @return {Promise<ApiResponse<void>>}
    */
   signin = async (user) => {
     try {
@@ -82,7 +82,7 @@ class ApiService {
   /**
    * Sign out with the current token.
    *
-   * @return {Promise<ApiResponse<null>>}
+   * @return {Promise<ApiResponse<void>>}
    */
   signout = async () => {
     try {
@@ -104,7 +104,7 @@ class ApiService {
   /**
    * Sign out of all devices.
    *
-   * @return {Promise<ApiResponse<null>>}
+   * @return {Promise<ApiResponse<void>>}
    */
   signoutAll = async () => {
     try {
