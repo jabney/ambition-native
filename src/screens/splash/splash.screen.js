@@ -1,35 +1,53 @@
 import React, { useState, useEffect } from 'react'
 import { View, Animated, Easing } from 'react-native'
+import { connect } from 'react-redux'
+
+import { scenes } from 'src/constants'
+import { isInitialized, isLoggedIn } from 'src/lib/user'
 
 import AmbitionLogo from 'src/components/ambition-logo'
 
 import styles from './splash.styles'
+import { init } from 'src/store/actions'
 
 /**
  * Ambition splash screen.
  */
-const SplashScreen = ({ navigation }) => {
+const SplashScreen = ({ navigation, start, user }) => {
   const [logoValue, setLogoValue] = useState(0)
+  const [init, setInit] = useState(false)
   const [fadeInAnim] = useState(() => new Animated.Value(0))
   const [logoAnim] = useState(() => new Animated.Value(0))
+
+  // Initialize the store.
+  useEffect(start, [])
+
+  useEffect(() => {
+    if (!init) { return }
+
+    if (isInitialized(user)) {
+      if (isLoggedIn(user)) {
+        navigation.navigate(scenes.MAIN)
+      } else {
+        navigation.navigate(scenes.AUTH)
+      }
+    }
+  }, [init, user])
 
   /**
    * Start the logo animation.
    */
-  const start = () => {
+  const animateIn = () => {
     Animated.sequence([
       Animated.spring(fadeInAnim, { toValue: 1, bounciness: 10, useNativeDriver: true }),
-      Animated.delay(250),
+      // Animated.delay(250),
       Animated.timing(logoAnim, { toValue: 1, duration: 750, easing: Easing.bounce, useNativeDriver: true }),
-    ]).start(() => {
-      // Load signin screen when animation finishes.
-      navigation.navigate('AuthScreen')
-    })
+    ]).start(() => setInit(true))
   }
 
   useEffect(() => {
     // Start the animation.
-    start()
+    animateIn()
     // Listen for animation values.
     logoAnim.addListener(({ value }) => void setLogoValue(value))
     return () => logoAnim.removeAllListeners()
@@ -52,4 +70,12 @@ const SplashScreen = ({ navigation }) => {
   </View>
 }
 
-export default SplashScreen
+const mapState = (state) => ({
+  user: state.user,
+})
+
+const mapDispatch = (dispatch) => ({
+  start: () => void dispatch(init()),
+})
+
+export default connect(mapState, mapDispatch)(SplashScreen)
