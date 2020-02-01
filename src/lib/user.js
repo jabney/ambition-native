@@ -18,5 +18,5 @@ export function isInitialized(user) {
  * @returns {boolean}
  */
 export function isLoggedIn(user) {
-  return user != null && typeof user.id === 'string'
+  return user != null && typeof user._id === 'string'
 }
