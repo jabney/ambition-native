@@ -1,6 +1,7 @@
 import superagent from 'superagent'
 import tokenSvc from './token.service'
 import urlPrefix from 'src/lib/middleware/url-prefix.superagent'
+import { TOKEN_WILL_EXPIRE_HOURS } from 'src/config/environment'
 import { API_KEY, API_URL } from 'src/config/environment'
 
 /**
@@ -115,6 +116,43 @@ class ApiService {
     } catch (error) {
       const { body } = error.response
       return [body, null]
+    }
+  }
+
+  /**
+   * Determine if the current token is valid or about to expire.
+   *
+   * @returns {Promise<ApiResponse<boolean>>}
+   */
+  tokenIsValid = async () => {
+    try {
+      const token = await tokenSvc.get()
+
+      // If there is no token, consider it invalid.
+      if (!token) {
+        return [null, false]
+      }
+
+      // Get the token info object.
+      const { body: { expires } } = await agent.get('/auth/token/info')
+        .set(...tokenHeader(token))
+        .send()
+
+      // If the token will expire soon, consider it invalid.
+      if (expires.hours < TOKEN_WILL_EXPIRE_HOURS) {
+        return [null, false]
+      }
+
+      return [null, true]
+
+    } catch (error) {
+      const { body } = error.response
+
+      if (body.status === 401) {
+        return [body, false]
+      }
+
+      throw error
     }
   }
 }
