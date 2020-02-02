@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TextInput, Animated } from 'react-native'
 import labelAnimations from './slick-input.animations'
 
@@ -25,6 +25,9 @@ const SlickInput = ({ label, value, onChangeText, containerStyle, inputStyle, ..
       Animated.timing(animation, { toValue: 0, duration: 250 }).start()
     }
   }
+
+  // Move label when value changes.
+  useEffect(() => void  moveLabel(false), [value])
 
   return <Animated.View style={[styles.container, containerStyle]}>
     <TextInput style={[styles.input, inputStyle]}
