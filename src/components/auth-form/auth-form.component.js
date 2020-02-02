@@ -12,16 +12,14 @@ import styles from './auth-form.styles'
  * Render email/pass form components with a button and link.
  */
 const AuthForm = ({ model, onChange, buttonText, linkText, onButton, onLink, animation, animType }) => {
-  const [email, setEmail] = useState(model && model.emeil || '')
-  const [password, setPassword] = useState(model && model.password || '')
   const [anims] = useState(() => formAnimations(animation, animType))
 
-  // Notify new model when email or password fields change.
-  useEffect(() => void onChange({ email, password }), [email, password])
+  const setEmail = (email) => onChange({ ...model, email })
+  const setPassword = (password) => onChange({ ...model, password })
 
   return <View style={styles.container}>
-    <SlickInput value={email} label='Email' containerStyle={anims.email} inputStyle={styles.input} onChangeText={setEmail} autoCapitalize='none' autoCorrect={false} />
-    <SlickInput value={password} label='Password' containerStyle={anims.password} inputStyle={styles.input} onChangeText={setPassword} secureTextEntry={true} />
+    <SlickInput value={model.email || ''} label='Email' containerStyle={anims.email} inputStyle={styles.input} onChangeText={setEmail} autoCapitalize='none' autoCorrect={false} />
+    <SlickInput value={model.password || ''} label='Password' containerStyle={anims.password} inputStyle={styles.input} onChangeText={setPassword} secureTextEntry={true} />
     <Button title={buttonText} containerStyle={[styles.button, anims.button]} onPress={onButton} />
     <NavLink text={linkText} containerStyle={[styles.link, anims.link]} onPress={onLink} />
   </View>
