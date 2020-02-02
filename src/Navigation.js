@@ -7,7 +7,7 @@ import { scenes } from './constants'
 
 import SplashScreen from './screens/splash'
 import AuthScreen from './screens/auth'
-import MainScreen from './screens/main/main.screen'
+import MainScreen from './screens/main'
 
 const mainNavigator = createSwitchNavigator({
   [scenes.SPLASH]: SplashScreen,
