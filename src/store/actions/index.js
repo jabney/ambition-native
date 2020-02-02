@@ -52,7 +52,7 @@ export const signup = (cred) => async (dispatch) => {
  *
  * @returns {ThunkAction<User>}
  */
-export const signin = ({ email, password  }) => async (dispatch) => {
+export const signin = ({ email, password }) => async (dispatch) => {
   const [signinErr] = await api.signin({ email, password })
 
   if (signinErr) {
@@ -72,6 +72,8 @@ export const signin = ({ email, password  }) => async (dispatch) => {
 
 /**
  * Sign the user out.
+ *
+ * @returns {ThunkAction<User>}
  */
 export const signout = () => async (dispatch) => {
   await api.signout()
@@ -81,6 +83,8 @@ export const signout = () => async (dispatch) => {
 
 /**
  * Sign the user out of all devices
+ *
+ * @returns {ThunkAction<User>}
  */
 export const signoutAll = () => async (dispatch) => {
   const [signoutErr] = await api.signoutAll()
@@ -94,6 +98,8 @@ export const signoutAll = () => async (dispatch) => {
 
 /**
  * Initialize the store.
+ *
+ * @returns {ThunkAction<any>}
  */
 export const init = () => async (dispatch) => {
   const [tokenErr, tokenIsValid] = await api.tokenIsValid()
