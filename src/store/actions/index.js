@@ -56,6 +56,7 @@ export const signup = (cred) => async (dispatch) => {
     return dispatch({ type: APP_ERROR, payload: { domain: 'signup', message }})
   }
 
+  dispatch(clearError('signup'))
   dispatch({ type: SET_USER, payload: user })
 }
 
@@ -81,6 +82,7 @@ export const signin = ({ email, password }) => async (dispatch) => {
     return dispatch({ type: APP_ERROR, payload: { domain: 'signin', message }})
   }
 
+  dispatch(clearError('signin'))
   dispatch({ type: SET_USER, payload: user })
 }
 
@@ -108,6 +110,7 @@ export const signoutAll = () => async (dispatch) => {
     return dispatch({ type: APP_ERROR, payload: { domain: 'signout', message }})
   }
 
+  dispatch(clearError('signout'))
   dispatch({ type: SET_USER, payload: null })
 }
 
@@ -157,5 +160,6 @@ export const init = () => async (dispatch) => {
     return dispatch({ type: APP_ERROR, payload: { domain: 'init', message }})
   }
 
+  dispatch(clearError('init'))
   dispatch({ type: SET_USER, payload: user })
 }
