@@ -1,8 +1,8 @@
 import superagent from 'superagent'
 import tokenSvc from './token.service'
 import urlPrefix from 'src/lib/middleware/url-prefix.superagent'
-import { TOKEN_WILL_EXPIRE_HOURS } from 'src/config/environment'
-import { API_KEY, API_URL } from 'src/config/environment'
+import { TOKEN_WILL_EXPIRE_HOURS } from 'src/environment'
+import { API_KEY, API_URL } from 'src/environment'
 
 /**
  * @typedef {import('src/models/user').ICredentials} Credentials

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { View } from 'react-native'
+
 import SlickInput from 'src/components/slick-input'
 import Button from 'src/components/button'
 import NavLink from 'src/components/nav-link'
 
 import formAnimations from './auth-form.animations'
-
 import styles from './auth-form.styles'
 
 /**
