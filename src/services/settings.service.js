@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 
 const SETTINGS_KEY = 'local-settings'
 
-const reSettings = /\{.*\}/
+const reSettings = /^\{.*\}$/
 
 /**
  * @type {any}
