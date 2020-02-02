@@ -17,9 +17,12 @@ const AuthForm = ({ model, onChange, buttonText, linkText, onButton, onLink, ani
   const setEmail = (email) => onChange({ ...model, email })
   const setPassword = (password) => onChange({ ...model, password })
 
+  const email = model && model.email || ''
+  const password = model && model.password || ''
+
   return <View style={styles.container}>
-    <SlickInput value={model.email || ''} label='Email' containerStyle={anims.email} inputStyle={styles.input} onChangeText={setEmail} autoCapitalize='none' autoCorrect={false} />
-    <SlickInput value={model.password || ''} label='Password' containerStyle={anims.password} inputStyle={styles.input} onChangeText={setPassword} secureTextEntry={true} />
+    <SlickInput value={email} label='Email' containerStyle={anims.email} inputStyle={styles.input} onChangeText={setEmail} autoCapitalize='none' autoCorrect={false} />
+    <SlickInput value={password} label='Password' containerStyle={anims.password} inputStyle={styles.input} onChangeText={setPassword} secureTextEntry={true} />
     <Button title={buttonText} containerStyle={[styles.button, anims.button]} onPress={onButton} />
     <NavLink text={linkText} containerStyle={[styles.link, anims.link]} onPress={onLink} />
   </View>
