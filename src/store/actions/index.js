@@ -1,4 +1,5 @@
 import api from 'src/services/api.service'
+import { setLastLogin } from 'src/services/settings.service'
 
 /**
  * @template T
@@ -35,6 +36,8 @@ export const signup = (cred) => async (dispatch) => {
     return console.error(signupErr)
   }
 
+  await setLastLogin(cred.email)
+
   const [userErr, user] = await api.user()
 
   if (userErr) {
@@ -49,12 +52,14 @@ export const signup = (cred) => async (dispatch) => {
  *
  * @returns {ThunkAction<User>}
  */
-export const signin = (cred) => async (dispatch) => {
-  const [signinErr] = await api.signin(cred)
+export const signin = ({ email, password  }) => async (dispatch) => {
+  const [signinErr] = await api.signin({ email, password })
 
   if (signinErr) {
     return console.error(signinErr)
   }
+
+  await setLastLogin(email)
 
   const [userErr, user] = await api.user()
 
