@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { View, Text, Animated, Keyboard, ScrollView, Dimensions } from 'react-native'
-import { signin, signup } from 'src/store/actions'
+import { signin, signup, clearError, clearErrors } from 'src/store/actions'
 import { connect } from 'react-redux'
 
 import { isLoggedIn } from 'src/lib/user'
@@ -9,6 +9,7 @@ import { getLastLogin } from 'src/services/settings.service'
 
 import AmbitionLogo from 'src/components/ambition-logo'
 import AuthForm from 'src/components/auth-form'
+import ErrorMessages from 'src/components/error-message'
 
 import useAnimations from './use-animations'
 import viewAnimations from './auth.animations'
@@ -17,7 +18,7 @@ import styles from './auth.styles'
 /**
  * Auth screen for signin and signup.
  */
-const AuthScreen = ({ navigation, signin, signup, user }) => {
+const AuthScreen = ({ navigation, signin, signup, user, error, clearErrors }) => {
   const [scrollEnabled, setScrollEnabled] = useState(false)
   const [signinModel, setSigninModel] = useState(() => ({ email: '', password: '' }))
   const [signupModel, setSignupModel] = useState(() => ({ email: '', password: '' }))
@@ -38,6 +39,9 @@ const AuthScreen = ({ navigation, signin, signup, user }) => {
     const lastLogin = await getLastLogin()
     setSigninModel({ email: lastLogin, password: '' })
   }
+
+  // Clear any errors on unmount.
+  useEffect(() => () => clearErrors(), [])
 
   // Perform one-time initialization.
   useEffect(() => {
@@ -86,6 +90,13 @@ const AuthScreen = ({ navigation, signin, signup, user }) => {
     scrollView.current.scrollTo({ x: num*width, y: 0 })
   }
 
+  /**
+   *
+   */
+  const onErrorComplete = () => {
+    clearErrors()
+  }
+
   const pageStyle = { width }
 
   return <Animated.View style={[styles.container, viewStyles]}>
@@ -128,16 +139,19 @@ const AuthScreen = ({ navigation, signin, signup, user }) => {
       <View style={pageStyle}>
       </View>
     </ScrollView>
+    <ErrorMessages error={error} onComplete={onErrorComplete} />
   </Animated.View>
 }
 
 const mapState = (state) => ({
   user: state.user,
+  error: state.errors.signin || state.errors.signup
 })
 
 const mapDispatch = (dispatch) => ({
   signin: (cred) => dispatch(signin(cred)),
   signup: (cred) => dispatch(signup(cred)),
+  clearErrors: () => dispatch(clearErrors(['signup', 'signin']))
 })
 
 export default connect(mapState, mapDispatch)(AuthScreen)
