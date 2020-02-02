@@ -7,4 +7,5 @@ export interface IAction<T=any> {
 
 export interface IStore {
   user: IUser
+  errors: {[key: string]: string}
 }

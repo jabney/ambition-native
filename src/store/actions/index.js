@@ -23,17 +23,28 @@ import { setLastLogin } from 'src/services/settings.service'
  */
 
 export const SET_USER = 'set-user'
+export const APP_ERROR = 'app-error'
+export const CLEAR_ERROR = 'clear-error'
+
+/**
+ * @param {import('src/models/api').ApiError} error
+ */
+const getErrorMessage = (error) => {
+  const { message, errors } = error
+  return Array.isArray(errors) ? errors.join(', ') : message
+}
 
 /**
  * @param {Credentials} cred
  *
- * @returns {ThunkAction<User>}
+ * @returns {ThunkAction<any>}
  */
 export const signup = (cred) => async (dispatch) => {
   const [signupErr] = await api.signup(cred)
 
   if (signupErr) {
-    return console.error(signupErr)
+    const message = getErrorMessage(signupErr)
+    return dispatch({ type: APP_ERROR, payload: { domain: 'signup', message }})
   }
 
   await setLastLogin(cred.email)
@@ -41,7 +52,8 @@ export const signup = (cred) => async (dispatch) => {
   const [userErr, user] = await api.user()
 
   if (userErr) {
-    return console.error(userErr)
+    const message = getErrorMessage(userErr)
+    return dispatch({ type: APP_ERROR, payload: { domain: 'signup', message }})
   }
 
   dispatch({ type: SET_USER, payload: user })
@@ -50,13 +62,14 @@ export const signup = (cred) => async (dispatch) => {
 /**
  * @param {Credentials} cred
  *
- * @returns {ThunkAction<User>}
+ * @returns {ThunkAction<any>}
  */
 export const signin = ({ email, password }) => async (dispatch) => {
   const [signinErr] = await api.signin({ email, password })
 
   if (signinErr) {
-    return console.error(signinErr)
+    const message = getErrorMessage(signinErr)
+    return dispatch({ type: APP_ERROR, payload: { domain: 'signin', message }})
   }
 
   await setLastLogin(email)
@@ -64,7 +77,8 @@ export const signin = ({ email, password }) => async (dispatch) => {
   const [userErr, user] = await api.user()
 
   if (userErr) {
-    return console.error(userErr)
+    const message = getErrorMessage(userErr)
+    return dispatch({ type: APP_ERROR, payload: { domain: 'signin', message }})
   }
 
   dispatch({ type: SET_USER, payload: user })
@@ -84,16 +98,39 @@ export const signout = () => async (dispatch) => {
 /**
  * Sign the user out of all devices
  *
- * @returns {ThunkAction<User>}
+ * @returns {ThunkAction<any>}
  */
 export const signoutAll = () => async (dispatch) => {
   const [signoutErr] = await api.signoutAll()
 
   if (signoutErr) {
-    return console.error(signoutErr)
+    const message = getErrorMessage(signoutErr)
+    return dispatch({ type: APP_ERROR, payload: { domain: 'signout', message }})
   }
 
   dispatch({ type: SET_USER, payload: null })
+}
+
+/**
+ * @param {string} domain
+ * @param {string} message
+ *
+ * @returns {Action<{domain: string, message: string}>}
+ */
+export const appError = (domain, message) => ({
+  type: APP_ERROR, payload: { domain, message }
+})
+
+/**
+ * @param {string} domain
+ *
+ * @returns {ThunkAction<{domain: string}>}
+ */
+export const clearError = (domain) => (dispatch, getState) => {
+  const { errors } = getState()
+  if (typeof errors[domain] === 'string') {
+    dispatch({ type: CLEAR_ERROR, payload: { domain } })
+  }
 }
 
 /**
@@ -105,7 +142,8 @@ export const init = () => async (dispatch) => {
   const [tokenErr, tokenIsValid] = await api.tokenIsValid()
 
   if (tokenErr) {
-    return console.error(tokenErr)
+    const message = getErrorMessage(tokenErr)
+    return dispatch({ type: APP_ERROR, payload: { domain: 'init', message }})
   }
 
   if (!tokenIsValid) {
@@ -115,7 +153,8 @@ export const init = () => async (dispatch) => {
   const [userErr, user] = await api.user()
 
   if (userErr) {
-    return console.error(userErr)
+    const message = getErrorMessage(userErr)
+    return dispatch({ type: APP_ERROR, payload: { domain: 'init', message }})
   }
 
   dispatch({ type: SET_USER, payload: user })
