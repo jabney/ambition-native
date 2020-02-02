@@ -3,13 +3,16 @@ import { View, Text, Animated, Keyboard, ScrollView, Dimensions } from 'react-na
 import { signin, signup } from 'src/store/actions'
 import { connect } from 'react-redux'
 
+import { isLoggedIn } from 'src/lib/user'
+import { scenes } from 'src/constants'
+import { getLastLogin } from 'src/services/settings.service'
+
 import AmbitionLogo from 'src/components/ambition-logo'
 import AuthForm from 'src/components/auth-form'
+
 import useAnimations from './use-animations'
 import viewAnimations from './auth.animations'
 import styles from './auth.styles'
-import { isLoggedIn } from 'src/lib/user'
-import { scenes } from 'src/constants'
 
 /**
  * Auth screen for signin and signup.
@@ -17,7 +20,8 @@ import { scenes } from 'src/constants'
 const AuthScreen = ({ navigation, signin, signup, user }) => {
   const [logoValue, setLogoValue] = useState(1)
   const [scrollEnabled, setScrollEnabled] = useState(false)
-  const [authModel, setAuthModel] = useState(() => ({ email: '', password: '' }))
+  const [signinModel, setSigninModel] = useState(() => ({ email: '', password: '' }))
+  const [signupModel, setSignupModel] = useState(() => ({ email: '', password: '' }))
 
   const [animation] = useState(() => new Animated.Value(0))
   const [viewStyles] = useState(() => viewAnimations(animation))
@@ -26,6 +30,16 @@ const AuthScreen = ({ navigation, signin, signup, user }) => {
   const anims = useAnimations(setLogoValue)
 
   const scrollView = useRef(/**@type {ScrollView}*/(null))
+
+  /**
+   *
+   */
+  const initialize = async () => {
+    const lastLogin = await getLastLogin()
+    setSigninModel({ email: lastLogin, password: '' })
+  }
+
+  useEffect(() => void initialize(), [])
 
   /**
    * Animate away the signin screen.
@@ -63,14 +77,14 @@ const AuthScreen = ({ navigation, signin, signup, user }) => {
    *
    */
   const onSignin = () => {
-    signin(authModel)
+    signin(signinModel)
   }
 
   /**
    *
    */
   const onSignup = () => {
-    signup(authModel)
+    signup(signupModel)
   }
 
   const { width } = Dimensions.get('window')
@@ -100,7 +114,7 @@ const AuthScreen = ({ navigation, signin, signup, user }) => {
     >
       <View style={pageStyle}>
         <View style={[styles.formView]}>
-          <AuthForm model={authModel} onChange={setAuthModel}
+          <AuthForm model={signinModel} onChange={setSigninModel}
             buttonText='Sign In' linkText='Need an account? Sign up...'
             onButton={onSignin} onLink={() => page(1)}
             animation={anims.signin}
@@ -111,7 +125,7 @@ const AuthScreen = ({ navigation, signin, signup, user }) => {
       <View style={pageStyle}>
         <View style={[styles.formView]}>
           <Text style={styles.title}>Create an Account</Text>
-          <AuthForm model={authModel} onChange={setAuthModel}
+          <AuthForm model={signupModel} onChange={setSignupModel}
             buttonText='Sign Up' linkText='Have an account? Sign in...'
             onButton={onSignup} onLink={() => page(0)}
             animation={anims.signup}
