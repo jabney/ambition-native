@@ -137,6 +137,20 @@ export const clearError = (domain) => (dispatch, getState) => {
 }
 
 /**
+ * @param {string[]} domains
+ *
+ * @returns {ThunkAction<{domain: string}>}
+ */
+export const clearErrors = (domains) => (dispatch, getState) => {
+  const { errors } = getState()
+  domains.forEach((domain) => {
+    if (typeof errors[domain] === 'string') {
+      dispatch({ type: CLEAR_ERROR, payload: { domain } })
+    }
+  })
+}
+
+/**
  * Initialize the store.
  *
  * @returns {ThunkAction<any>}
