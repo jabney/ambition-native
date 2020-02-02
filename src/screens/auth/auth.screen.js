@@ -18,60 +18,50 @@ import styles from './auth.styles'
  * Auth screen for signin and signup.
  */
 const AuthScreen = ({ navigation, signin, signup, user }) => {
-  const [logoValue, setLogoValue] = useState(1)
   const [scrollEnabled, setScrollEnabled] = useState(false)
   const [signinModel, setSigninModel] = useState(() => ({ email: '', password: '' }))
   const [signupModel, setSignupModel] = useState(() => ({ email: '', password: '' }))
 
-  const [animation] = useState(() => new Animated.Value(0))
-  const [viewStyles] = useState(() => viewAnimations(animation))
+  const [viewAnim] = useState(() => new Animated.Value(0))
+  const [logoAnim] = useState(() => new Animated.Value(1))
+  const [viewStyles] = useState(() => viewAnimations(viewAnim))
 
   // Set up form and scroll animations/interpolations.
-  const anims = useAnimations(setLogoValue)
+  const anims = useAnimations(logoAnim)
 
   const scrollView = useRef(/**@type {ScrollView}*/(null))
 
   /**
-   *
+   * Set initial form model values.
    */
-  const initialize = async () => {
+  const initModel = async () => {
     const lastLogin = await getLastLogin()
     setSigninModel({ email: lastLogin, password: '' })
   }
 
-  useEffect(() => void initialize(), [])
-
-  /**
-   * Animate away the signin screen.
-   */
-  const dismiss = () => {
-    Keyboard.dismiss()
-    Animated.timing(animation, { toValue: 1, duration: 250, useNativeDriver: true })
-      .start(() => {
-        navigation.navigate(scenes.MAIN)
-      })
-  }
-
+  // Perform one-time initialization.
   useEffect(() => {
-    if (isLoggedIn(user)) {
-      dismiss()
-    }
-  }, [user])
+    initModel()
 
-  /**
-   * Start the form intro animation.
-   */
-  const start = () => {
+    // Trigger start animation.
     Animated.sequence([
       Animated.delay(250),
       Animated.timing(anims.signin, { toValue: 1, duration: 750, useNativeDriver: true }),
     ]).start(() => {
       setScrollEnabled(true)
     })
-  }
+  }, [])
 
-  // Trigger start animation.
-  useEffect(() => void start(), [])
+  // Check if  user is logged in.
+  useEffect(() => {
+    if (isLoggedIn(user)) {
+      // Animate away the signin screen.
+      Keyboard.dismiss()
+      Animated.timing(viewAnim, { toValue: 1, duration: 250, useNativeDriver: true }).start(() => {
+        navigation.navigate(scenes.MAIN)
+      })
+    }
+  }, [user])
 
   /**
    *
@@ -99,7 +89,7 @@ const AuthScreen = ({ navigation, signin, signup, user }) => {
   const pageStyle = { width }
 
   return <Animated.View style={[styles.container, viewStyles]}>
-    <AmbitionLogo value={logoValue} />
+    <AmbitionLogo animation={logoAnim} />
     <ScrollView ref={scrollView}
       horizontal
       pagingEnabled

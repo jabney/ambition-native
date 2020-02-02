@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Animated, Dimensions } from 'react-native'
 
-const useAnimations = (setLogoValue) => {
-  // const [logoValue, setLogoValue] = useState(1)
-
+const useAnimations = (logoAnim) => {
   const [scroll] = useState(() => new Animated.Value(0))
   const [signin] = useState(() => new Animated.Value(0))
   const [signup] = useState(() => new Animated.Value(0))
@@ -40,7 +38,7 @@ const useAnimations = (setLogoValue) => {
   // Set up animation listeners.
   useEffect(() => {
     scroll.addListener(({ value }) => {
-      setLogoValue(logoInterpolator.__getValue())
+      logoAnim.setValue(logoInterpolator.__getValue())
       signin.setValue(signinInterpolator.__getValue())
       signup.setValue(signupInterpolator.__getValue())
     })

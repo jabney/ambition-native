@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { StyleSheet, Animated } from 'react-native'
 import Svg, { Path } from 'react-native-svg'
 import { interpolate, combine, separate, splitPathString } from 'flubber/index'
@@ -42,32 +42,66 @@ const groups = [
 /**
  * Create interpolators for each animation group.
  */
-const group0interpolator = combine(splitPathString(groups[0].orchid), groups[0].butterfly, { single: true, maxSegmentLength: 5 })
-const group1interpolator = combine(splitPathString(groups[1].orchid), groups[1].butterfly, { single: true, maxSegmentLength: 5 })
-const group2interpolator = combine(splitPathString(groups[2].orchid), groups[2].butterfly, { single: true, maxSegmentLength: 10 })
-const group3interpolator = interpolate(groups[3].orchid, groups[3].butterfly, { maxSegmentLength: 10 })
-const group4interpolator = separate(groups[4].orchid, splitPathString(groups[4].butterfly), { single: true, maxSegmentLength: 10 })
-const group5interpolator = separate(groups[5].orchid, splitPathString(groups[5].butterfly), { single: true, maxSegmentLength: 10 })
-const group6interpolator = interpolate(groups[6].orchid, groups[6].butterfly, { maxSegmentLength: 10 })
+const interpolators = [
+  combine(splitPathString(groups[0].orchid), groups[0].butterfly, { single: true, maxSegmentLength: 5 }),
+  combine(splitPathString(groups[1].orchid), groups[1].butterfly, { single: true, maxSegmentLength: 5 }),
+  combine(splitPathString(groups[2].orchid), groups[2].butterfly, { single: true, maxSegmentLength: 10 }),
+  interpolate(groups[3].orchid, groups[3].butterfly, { maxSegmentLength: 10 }),
+  separate(groups[4].orchid, splitPathString(groups[4].butterfly), { single: true, maxSegmentLength: 10 }),
+  separate(groups[5].orchid, splitPathString(groups[5].butterfly), { single: true, maxSegmentLength: 10 }),
+  interpolate(groups[6].orchid, groups[6].butterfly, { maxSegmentLength: 10 }),
+]
 
 const ambitionPath = 'M375.5,526.49V515.563c0-.047,43.718.933,42.492-30.027-0.344-8.7-16.925-52.018-37.653-103.086H213.775c-20.617,48.289-37.325,87.947-38.941,93.378-12.364,41.566,48.676,39.735,48.676,39.735V526.49H88.411V515.563s30.111-2.1,46.688-26.821C152.981,462.07,309.934,88.411,309.934,88.411h10.927S474.844,459.118,488.742,481.788c22.738,37.091,54.635,33.775,54.635,33.775V526.49H375.5ZM298.013,186.755S257.657,279.928,223.119,360.6h148.29C337.689,278.511,298.013,186.755,298.013,186.755Z'
 
 /**
- * Ambition animated logo.
+ * @typedef {Object} LogoProps
+ * @property {Animated.Value & { __getValue?: () => number }} animation
+ * @property {any} [style]
+ * @property {string} [color]
+ * @property {string} [aColor]
  */
-const AmbitionLogo = ({ value, aColor = '#ddd', color='#eee', style={} }) => {
+
+/**
+ * Ambition animated logo.
+ *
+ * @type {React.FunctionComponent<LogoProps>}
+ */
+const AmbitionLogo = ({ animation, aColor, color, style }) => {
+  const refs = interpolators.map(() => useRef(null))
+
+  useEffect(() => {
+    if (animation == null) { return }
+
+    // Initialize the paths with the current animation value.
+    refs.forEach((ref, i) => {
+      ref.current.setNativeProps({ d: interpolators[i](animation.__getValue()) })
+    })
+
+    // Update the paths when the animation changes.
+    animation.addListener(({ value }) => {
+      refs.forEach((ref, i) => {
+        ref.current.setNativeProps({ d: interpolators[i](value) })
+      })
+    })
+
+    return () => animation.removeAllListeners()
+  }, [])
+
   return <Animated.View style={[StyleSheet.absoluteFill, styles.container, style]}>
-  <Svg style={styles.svg} viewBox='0 0 600 600'>
-    <Path d={group0interpolator(value)} fill={color} />
-    <Path d={group1interpolator(value)} fill={color} />
-    <Path d={group2interpolator(value)} fill={color} />
-    <Path d={group3interpolator(value)} fill={color} />
-    <Path d={group4interpolator(value)} fill={color} />
-    <Path d={group5interpolator(value)} fill={color} />
-    <Path d={group6interpolator(value)} fill={color} />
-    <Path d={ambitionPath} fill={aColor} />
-  </Svg>
-</Animated.View>
+    <Svg style={styles.svg} viewBox='0 0 600 600'>
+      {
+        groups.map((group, i) => <Path key={i} d={group.orchid} fill={color} ref={refs[i]} />)
+      }
+      <Path d={ambitionPath} fill={aColor} />
+    </Svg>
+  </Animated.View>
+}
+
+AmbitionLogo.defaultProps = {
+  aColor: '#ddd',
+  color: '#eee',
+  style: {},
 }
 
 export default AmbitionLogo

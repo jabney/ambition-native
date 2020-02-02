@@ -20,23 +20,11 @@ const SplashScreen = ({ navigation, start, user }) => {
 
   const viewStyles = useInitialization(navigation, start, init, user)
 
-  /**
-   * Start the logo animation.
-   */
-  const animateIn = () => {
+  useEffect(() => {
     Animated.sequence([
       Animated.spring(introAnim, { toValue: 1, bounciness: 10, useNativeDriver: true }),
-      // Animated.delay(250),
       Animated.timing(logoAnim, { toValue: 1, duration: 750, easing: Easing.bounce, useNativeDriver: true }),
     ]).start(() => setInit(true))
-  }
-
-  useEffect(() => {
-    // Start the animation.
-    animateIn()
-    // Listen for animation values.
-    logoAnim.addListener(({ value }) => void setLogoValue(value))
-    return () => logoAnim.removeAllListeners()
   }, [])
 
   const zoomIn = introAnim.interpolate({
@@ -52,7 +40,7 @@ const SplashScreen = ({ navigation, start, user }) => {
   }
 
   return <Animated.View style={[styles.container, viewStyles]}>
-    <AmbitionLogo value={logoValue} style={logoStyles} />
+    <AmbitionLogo style={logoStyles} animation={logoAnim} />
   </Animated.View>
 }
 
