@@ -13,7 +13,6 @@ import styles from './splash.styles'
  * Ambition splash screen.
  */
 const SplashScreen = ({ navigation, start, user }) => {
-  const [logoValue, setLogoValue] = useState(0)
   const [init, setInit] = useState(false)
   const [introAnim] = useState(() => new Animated.Value(0))
   const [logoAnim] = useState(() => new Animated.Value(0))
