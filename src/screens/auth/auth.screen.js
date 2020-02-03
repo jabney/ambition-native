@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { View, Text, Animated, Keyboard, ScrollView, Dimensions } from 'react-native'
-import { signin, signup, clearError, clearErrors } from 'src/store/actions'
 import { connect } from 'react-redux'
 
 import { isLoggedIn } from 'src/lib/user'
@@ -9,10 +8,11 @@ import { getLastLogin } from 'src/services/settings.service'
 
 import AmbitionLogo from 'src/components/ambition-logo'
 import AuthForm from 'src/components/auth-form'
-import ErrorMessages from 'src/components/error-message'
+import ErrorMessage from 'src/components/error-message'
 
 import useAnimations from './use-animations'
 import viewAnimations from './auth.animations'
+import store from './auth.store'
 import styles from './auth.styles'
 
 /**
@@ -91,7 +91,7 @@ const AuthScreen = ({ navigation, signin, signup, user, error, clearErrors }) =>
   }
 
   /**
-   *
+   * Called when the error message component animation completes.
    */
   const onErrorComplete = () => {
     clearErrors()
@@ -139,19 +139,8 @@ const AuthScreen = ({ navigation, signin, signup, user, error, clearErrors }) =>
       <View style={pageStyle}>
       </View>
     </ScrollView>
-    <ErrorMessages error={error} onComplete={onErrorComplete} />
+    <ErrorMessage error={error} onComplete={onErrorComplete} />
   </Animated.View>
 }
 
-const mapState = (state) => ({
-  user: state.user,
-  error: state.errors.signin || state.errors.signup
-})
-
-const mapDispatch = (dispatch) => ({
-  signin: (cred) => dispatch(signin(cred)),
-  signup: (cred) => dispatch(signup(cred)),
-  clearErrors: () => dispatch(clearErrors(['signup', 'signin']))
-})
-
-export default connect(mapState, mapDispatch)(AuthScreen)
+export default connect(...store)(AuthScreen)
