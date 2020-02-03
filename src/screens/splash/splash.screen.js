@@ -25,6 +25,7 @@ const SplashScreen = ({ navigation, init, user }) => {
     // Initialize the store.
     init()
 
+    // Start intro animation.
     Animated.sequence([
       Animated.spring(viewAnim, { toValue: 1, bounciness: 10, useNativeDriver: true }),
       Animated.timing(logoAnim, { toValue: 1, duration: 750, easing: Easing.bounce, useNativeDriver: true }),
@@ -36,6 +37,7 @@ const SplashScreen = ({ navigation, init, user }) => {
 
     if (isInitialized(user)) {
       if (isLoggedIn(user)) {
+        // Start outro animation.
         Animated.timing(viewAnim, { toValue: 2, duration: 250, useNativeDriver: true }).start(() => {
           navigation.navigate(scenes.MAIN)
         })
