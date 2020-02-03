@@ -27,6 +27,8 @@ const AuthScreen = ({ navigation, signin, signup, user, error, clearErrors }) =>
   const [logoAnim] = useState(() => new Animated.Value(1))
   const [viewStyles] = useState(() => viewAnimations(viewAnim))
 
+  const [busy, setBusy] = useState(false)
+
   // Set up form and scroll animations/interpolations.
   const anims = useAnimations(logoAnim)
 
@@ -42,6 +44,9 @@ const AuthScreen = ({ navigation, signin, signup, user, error, clearErrors }) =>
 
   // Clear any errors on unmount.
   useEffect(() => () => clearErrors(), [])
+
+  // Clear busy flag when user or error changes.
+  useEffect(() => setBusy(false), [user, error])
 
   // Perform one-time initialization.
   useEffect(() => {
@@ -71,6 +76,7 @@ const AuthScreen = ({ navigation, signin, signup, user, error, clearErrors }) =>
    *
    */
   const onSignin = () => {
+    setBusy(true)
     signin(signinModel)
   }
 
@@ -78,6 +84,7 @@ const AuthScreen = ({ navigation, signin, signup, user, error, clearErrors }) =>
    *
    */
   const onSignup = () => {
+    setBusy(true)
     signup(signupModel)
   }
 
@@ -120,6 +127,7 @@ const AuthScreen = ({ navigation, signin, signup, user, error, clearErrors }) =>
             onButton={onSignin} onLink={() => page(1)}
             animation={anims.signin}
             animType='drop'
+            busy={busy}
           />
         </View>
       </View>
@@ -131,6 +139,7 @@ const AuthScreen = ({ navigation, signin, signup, user, error, clearErrors }) =>
             onButton={onSignup} onLink={() => page(0)}
             animation={anims.signup}
             animType='drop'
+            busy={busy}
           />
         </View>
       </View>

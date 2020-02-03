@@ -5,11 +5,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     overflow: 'hidden',
   },
-  text: {
-    color: 'white',
+  button: {
     backgroundColor: '#9bf',
     padding: 6,
+  },
+  text: {
+    color: 'white',
     textAlign: 'center',
+  },
+  disabled: {
+    backgroundColor: '#aaa',
   },
 })
 
