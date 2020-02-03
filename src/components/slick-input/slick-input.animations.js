@@ -8,7 +8,7 @@ const animations = (animation) => {
 
   const labelY = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, -pad.top - pad.vertical - pad.border - 3],
+    outputRange: [0, -pad.top - pad.vertical - pad.border - 5],
   })
 
   const labelX = animation.interpolate({
