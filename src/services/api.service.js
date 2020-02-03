@@ -46,11 +46,11 @@ class ApiService {
    */
   signup = async (user) => {
     try {
-      const { body: { token } } = await agent.post('/auth/signup')
+      const { body } = await agent.post('/auth/signup')
         .set(...apiKeyHeader)
         .send(user)
 
-      await tokenSvc.set(token)
+      await tokenSvc.set(body.token)
       return [null]
 
     } catch (error) {
@@ -66,11 +66,14 @@ class ApiService {
    */
   signin = async (user) => {
     try {
-      const { body: { token } } = await agent.post('/auth/signin')
+      const token = await tokenSvc.get()
+
+      const { body } = await agent.post('/auth/signin')
         .set(...apiKeyHeader)
+        .set(...authHeader(token))
         .send(user)
 
-      await tokenSvc.set(token)
+      await tokenSvc.set(body.token)
       return [null]
 
     } catch (error) {
