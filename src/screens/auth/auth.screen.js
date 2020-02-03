@@ -45,8 +45,8 @@ const AuthScreen = ({ navigation, signin, signup, user, error, clearErrors }) =>
   // Clear any errors on unmount.
   useEffect(() => () => clearErrors(), [])
 
-  // Clear busy flag when user or error changes.
-  useEffect(() => setBusy(false), [user, error])
+  // Clear busy flag when error state changes.
+  useEffect(() => setBusy(false), [error])
 
   // Perform one-time initialization.
   useEffect(() => {
