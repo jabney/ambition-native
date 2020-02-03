@@ -6,9 +6,14 @@ import pad from './pad'
  */
 const animations = (animation) => {
 
-  const labelPos = animation.interpolate({
+  const labelY = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, -pad.top - pad.vertical - pad.border - 2],
+    outputRange: [0, -pad.top - pad.vertical - pad.border - 3],
+  })
+
+  const labelX = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -4],
   })
 
   const labelColor = animation.interpolate({
@@ -18,16 +23,19 @@ const animations = (animation) => {
 
   const labelSize = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [14, 12],
+    outputRange: [1, 0.9],
   })
 
   const container = {
-    transform: [{ translateY: labelPos }],
+    transform: [
+      { translateY: labelY },
+      { translateX: labelX },
+    ],
   }
 
   const text = {
     color: labelColor,
-    fontSize: labelSize,
+    transform: [{ scale: labelSize }],
   }
 
   return { container, text }
